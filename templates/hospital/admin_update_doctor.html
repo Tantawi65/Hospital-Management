@@ -1,0 +1,136 @@
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link { text-decoration: none; }
+    
+    .container {
+      padding: 2rem;
+    }
+
+    .form-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin: 0 auto;
+      max-width: 800px;
+    }
+
+    .form-header {
+      background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .form-header h3 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .form-body {
+      padding: 2rem;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .form-control:focus {
+      border-color: #ffc107;
+      box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      padding: 0.75rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="form-container">
+    <div class="form-header">
+      <h3><i class="fas fa-user-edit"></i> Update Doctor Details</h3>
+    </div>
+    <div class="form-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              {% render_field userForm.first_name class="form-control" placeholder="Enter first name" %}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              {% render_field userForm.username class="form-control" placeholder="Enter username" %}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile</label>
+              {% render_field doctorForm.mobile class="form-control" placeholder="Enter mobile number" %}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              {% render_field doctorForm.department class="form-control" placeholder="Select department" %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              {% render_field userForm.last_name class="form-control" placeholder="Enter last name" %}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              {% render_field userForm.password class="form-control" placeholder="Enter password" %}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              {% render_field doctorForm.address class="form-control" placeholder="Enter address" %}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Profile Picture</label>
+              {% render_field doctorForm.profile_pic class="form-control" %}
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <button type="submit" class="btn-submit">
+              <i class="fas fa-save"></i> Update Doctor
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

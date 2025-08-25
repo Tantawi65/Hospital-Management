@@ -1,0 +1,544 @@
+{% extends 'hospital/homebase.html' %}
+{% load static %}
+
+{% block content %}
+
+<head>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style media="screen">
+        /* General Styles */
+        body {
+            transition: background-color 0.5s ease, color 0.5s;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: calc(100vh - 120px); /* Adjust for navbar (60px) and footer (60px) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .hero video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .hero-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, rgba(0, 170, 255, 0.7), rgba(0, 204, 153, 0.7));
+          z-index: 0;
+        }
+
+        .dark-mode .hero-overlay {
+          background-color: #1a1a2e;
+    color: #e0e0e0;
+        }
+
+        .hero-content {
+            z-index: 1;
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .dark-mode .hero-content h1 {
+            color: #ecf0f1;
+        }
+
+        .hero-content .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .dark-mode .hero-content .tagline {
+            color: #bdc3c7;
+        }
+
+        .hero-content .subheading {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .dark-mode .hero-content .subheading {
+            color: #bdc3c7;
+        }
+
+        .hero-buttons .btn {
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: transform 0.3s, background 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00aaff, #00cc99);
+            color: #fff;
+        }
+
+        .dark-mode .btn-primary {
+          background-color: #1a1a2e;
+          color: #e0e0e0;        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #00cc99, #00aaff);
+        }
+
+        .dark-mode .btn-primary:hover {
+            background: linear-gradient(135deg, #00b894, #2a2a3e);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+            margin-left: 20px;
+        }
+
+        .dark-mode .btn-secondary {
+            border-color: #e0e0e0;
+            color: #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            transform: scale(1.05);
+            background: #fff;
+            color: #00aaff;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 50px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .dark-mode .services {
+            background-color: #2a2a3e;
+        }
+
+        .services h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .dark-mode .services h2 {
+            color: #ecf0f1;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: #f9fbfd;
+            padding: 30px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .dark-mode .service-card {
+            background: #3a3a4e;
+        }
+
+        .service-card i {
+            font-size: 2.5rem;
+            color: #00aaff;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .dark-mode .service-card i {
+            color: #00cc99;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .service-card:hover {
+            box-shadow: 0 10px 20px rgba(42, 42, 62, 0.3);
+        }
+
+        .service-card:hover i {
+            color: #00cc99;
+        }
+
+        .dark-mode .service-card:hover i {
+            color: #00aaff;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .dark-mode .service-card h3 {
+            color: #ecf0f1;
+        }
+
+        .service-card .description {
+            font-size: 0.9rem;
+            color: #777;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+
+        .dark-mode .service-card .description {
+            color: #bbb;
+        }
+
+        .service-card:hover .description {
+            max-height: 100px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 50px;
+            text-align: center;
+            background-color: #f1f9ff;
+        }
+
+        .dark-mode .features {
+            background-color: #1a1a2e;
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .dark-mode .features h2 {
+            color: #ecf0f1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-item {
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .feature-item i {
+            font-size: 2.5rem;
+            color: #00aaff;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .feature-item i {
+            color: #00cc99;
+        }
+
+        .feature-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .dark-mode .feature-item h3 {
+            color: #ecf0f1;
+        }
+
+        .feature-item p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .dark-mode .feature-item p {
+            color: #bbb;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px);
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 80px 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #f0f7ff, #e0eaff);
+          }
+
+        .dark-mode .faq {
+            background: linear-gradient(135deg, #2a2a3e, #1a1a2e);
+        }
+
+        .faq h2 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .dark-mode .faq h2 {
+            color: #ecf0f1;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: #fff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .dark-mode .faq-item {
+            background: #3a3a4e;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00aaff;
+            transition: background 0.3s;
+        }
+
+        .dark-mode .faq-question {
+            color: #16e6a4;
+        }
+
+        .faq-question:hover {
+            background: #f9fbfd;
+        }
+
+        .dark-mode .faq-question:hover {
+            background: #4a4a5e;
+        }
+
+        .faq-question i {
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 20px;
+            font-size: 1rem;
+            color: #666;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .dark-mode .faq-answer {
+            color: #bbb;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<!-- Hero Section -->
+<div class="hero">
+    <video autoplay muted loop class="hero-video">
+        <source src="{% static 'videos/hospital-bg.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>Hospital Management System</h1>
+        <p class="tagline">Your Health, Our Priority - Advanced Care, Compassionate Touch</p>
+        <p class="subheading">Committed to modern healthcare with a human touch.</p>
+        <div class="hero-buttons">
+            <a href="/patientclick" class="btn btn-primary">Book an Appointment</a>
+            <a href="/aboutus" class="btn btn-secondary">About Us</a>
+        </div>
+    </div>
+</div>
+
+<!-- Service Highlights Section -->
+<section class="services">
+    <h2>Our Services</h2>
+    <div class="services-grid">
+        <div class="service-card">
+            <i class="fas fa-ambulance"></i>
+            <h3>Emergency Care</h3>
+            <p class="description">24/7 emergency services for critical care needs.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-heartbeat"></i>
+            <h3>Cardiology</h3>
+            <p class="description">Expert heart care with advanced diagnostics.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-stethoscope"></i>
+            <h3>Pediatrics</h3>
+            <p class="description">Compassionate care for children of all ages.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-syringe"></i>
+            <h3>Surgery</h3>
+            <p class="description">State-of-the-art surgical procedures.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-microscope"></i>
+            <h3>Diagnostics</h3>
+            <p class="description">Accurate diagnostics with modern technology.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-prescription-bottle"></i>
+            <h3>Pharmacy</h3>
+            <p class="description">On-site pharmacy for all your medication needs.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="features">
+    <h2>Why Choose Us?</h2>
+    <div class="features-grid">
+        <div class="feature-item">
+            <i class="fas fa-ambulance"></i>
+            <h3>24/7 Emergency Services</h3>
+            <p>Always available for urgent medical needs.</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-heart"></i>
+            <h3>Compassionate Care</h3>
+            <p>We treat you like family.</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-wallet"></i>
+            <h3>Affordable Plans</h3>
+            <p>Quality care that fits your budget.</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-flask"></i>
+            <h3>Medical Research</h3>
+            <p>Contributing to healthcare innovation.</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-calendar-check"></i>
+            <h3>Online Booking</h3>
+            <p>Convenient appointment scheduling.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-container">
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What is a Hospital Management System</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>A Hospital Management System is software that helps hospitals and clinics manage their daily operations. It keeps track of patient records, doctor appointments, billing, inventory, and staff schedules.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How do I book an appointment?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>You can book an appointment online by clicking the "Book an Appointment" button on our homepage and make an account.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Does the system generate and manage patient bills?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, the system automatically generates patient bills based on consultations, treatments, tests, and medications.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Can doctors update patient records directly in the system?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, doctors can update patient records directly in the system.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include "hospital/admin_doctor_patient_card.html" %}
+
+<!-- JavaScript for FAQ Accordion -->
+<script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+        item.addEventListener('click', () => {
+            const faqItem = item.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all other FAQ items
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                if (otherItem !== faqItem) {
+                    otherItem.classList.remove('active');
+                }
+            });
+            
+            // Toggle the clicked FAQ item
+            if (!isActive) {
+                faqItem.classList.add('active');
+            } else {
+                faqItem.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+{% endblock content %}

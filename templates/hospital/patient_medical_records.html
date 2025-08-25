@@ -1,0 +1,388 @@
+{% extends 'hospital/patient_base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .medical-records {
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .records-header {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px 15px 0 0;
+        margin-bottom: 0;
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    .records-content {
+        background: white;
+        border-radius: 0 0 15px 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        min-height: 500px;
+    }
+
+    .medical-table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 1.5rem;
+    }
+
+    .table thead th {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        border: none;
+        font-weight: 600;
+        padding: 1rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .table tbody td {
+        padding: 1rem;
+        border-color: #dee2e6;
+        vertical-align: middle;
+        font-size: 0.9rem;
+        color: #495057;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .record-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .record-id {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+    }
+
+    .doctor-name {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        color: white;
+    }
+
+    .diagnosis-text {
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        color: white;
+        max-width: 200px;
+        word-wrap: break-word;
+    }
+
+    .treatment-text {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        max-width: 200px;
+        word-wrap: break-word;
+    }
+
+    .test-results {
+        max-width: 250px;
+    }
+
+    .test-results ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .test-results li {
+        background: #f8f9fa;
+        padding: 0.5rem;
+        margin-bottom: 0.25rem;
+        border-radius: 5px;
+        border-left: 3px solid #e74c3c;
+        font-size: 0.8rem;
+    }
+
+    .date-badge {
+        background: #6c757d;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+    }
+
+    .empty-state i {
+        font-size: 5rem;
+        color: #dee2e6;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state h4 {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-consult {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 2rem;
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .btn-consult:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+    }
+
+    .stats-card {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .stats-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #e74c3c;
+        display: block;
+    }
+
+    .stats-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .records-header {
+            padding: 1.5rem;
+        }
+        
+        .records-content {
+            padding: 1.5rem;
+        }
+        
+        .table-responsive {
+            border-radius: 10px;
+        }
+        
+        .medical-table {
+            font-size: 0.8rem;
+        }
+        
+        .table thead th, .table tbody td {
+            padding: 0.75rem 0.5rem;
+        }
+    }
+</style>
+
+<div class="medical-records">
+    <div class="container">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="row">
+                <div class="col-12">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Records Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="records-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">
+                                <i class="fas fa-file-medical me-3"></i>
+                                Medical Records
+                            </h2>
+                            <p class="mb-0 opacity-75">Your complete medical history and treatment records</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="fas fa-heartbeat" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Records Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="records-content">
+                    {% if medical_records %}
+                        <!-- Stats Row -->
+                        <div class="row mb-4">
+                            <div class="col-md-3 col-6">
+                                <div class="stats-card">
+                                    <span class="stats-number">{{ medical_records|length }}</span>
+                                    <div class="stats-label">Total Records</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stats-card">
+                                    <span class="stats-number">{{ medical_records|length }}</span>
+                                    <div class="stats-label">Consultations</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stats-card">
+                                    <span class="stats-number">{{ medical_records.0.created_at|date:"Y" }}</span>
+                                    <div class="stats-label">Since Year</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stats-card">
+                                    <span class="stats-number">{{ medical_records|length }}</span>
+                                    <div class="stats-label">Total Visits</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Records Table -->
+                        <div class="table-responsive">
+                            <table class="table medical-table">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-id-card me-2"></i>Record ID</th>
+                                        <th><i class="fas fa-user-md me-2"></i>Doctor</th>
+                                        <th><i class="fas fa-diagnosis me-2"></i>Diagnosis</th>
+                                        <th><i class="fas fa-pills me-2"></i>Treatment</th>
+                                        <th><i class="fas fa-vial me-2"></i>Test Results</th>
+                                        <th><i class="fas fa-calendar me-2"></i>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for record in medical_records %}
+                                    <tr>
+                                        <td>
+                                            <span class="record-badge record-id">
+                                                #{{ record.record_id }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="record-badge doctor-name">
+                                                {{ record.doctor.get_name|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="record-badge diagnosis-text">
+                                                {{ record.diagnosis|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="record-badge treatment-text">
+                                                {{ record.prescribed_treatment|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td class="test-results">
+                                            {% if record.test_results %}
+                                                <ul>
+                                                    {% for test in record.test_results %}
+                                                        <li>
+                                                            <strong>{{ test.test }}:</strong> {{ test.result }}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                <span class="text-muted">No tests</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="date-badge">
+                                                {{ record.created_at|date:"d M Y H:i" }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <!-- Empty State -->
+                        <div class="empty-state">
+                            <i class="fas fa-file-medical-alt"></i>
+                            <h4>No Medical Records Found</h4>
+                            <p>You don't have any medical records yet. Schedule an appointment with a doctor to start building your medical history.</p>
+                            <a href="/patient-book-appointment" class="btn-consult">
+                                <i class="fas fa-calendar-plus me-2"></i>
+                                Book Appointment
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <!-- Help Section -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card" style="border: 2px dashed #dee2e6; background: #f8f9fa;">
+                                <div class="card-body text-center py-3">
+                                    <i class="fas fa-question-circle text-muted mb-2"></i>
+                                    <h6 class="text-muted mb-1">Need a Copy of Your Records?</h6>
+                                    <p class="text-muted mb-0 small">Contact our medical records department for official copies or additional information</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

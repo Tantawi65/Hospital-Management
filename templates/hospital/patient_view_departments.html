@@ -1,0 +1,200 @@
+{% extends 'hospital/patient_base.html' %}
+{% block content %}
+{% load static %}
+
+<style media="screen">
+    a:link { text-decoration: none; }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #495057;
+    }
+    
+    .page-title h2 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-title p {
+      font-size: 1rem;
+      color: #6c757d;
+    }
+    
+    .modern-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .modern-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modern-table th {
+      background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      text-align: center;
+      vertical-align: middle;
+    }
+    
+    .modern-table td {
+      text-align: center;
+      vertical-align: middle;
+      border-color: #e9ecef;
+    }
+    
+    .modern-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .department-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border-left: 4px solid #9b59b6;
+    }
+
+    .department-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(155, 89, 182, 0.2);
+    }
+
+    .department-icon {
+      font-size: 2rem;
+      color: #9b59b6;
+      margin-bottom: 1rem;
+    }
+
+    .department-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    .department-description {
+      color: #7f8c8d;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #6c757d;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #9b59b6;
+    }
+</style>
+
+<div class="dashboard-main">
+  <div class="dashboard-content">
+    <div class="page-title">
+      <h2><i class="fas fa-hospital"></i> Hospital Departments</h2>
+      <p>Explore our comprehensive medical departments and specialties</p>
+    </div>
+    
+    <div class="container-fluid">
+      {% if departments %}
+      <div class="row">
+        {% for dept in departments %}
+        <div class="col-lg-6 col-md-6 mb-4">
+          <div class="department-card">
+            <div class="text-center">
+              <div class="department-icon">
+                {% if 'cardio' in dept.lower or 'heart' in dept.lower %}
+                  <i class="fas fa-heartbeat"></i>
+                {% elif 'neuro' in dept.lower or 'brain' in dept.lower %}
+                  <i class="fas fa-brain"></i>
+                {% elif 'ortho' in dept.lower or 'bone' in dept.lower %}
+                  <i class="fas fa-bone"></i>
+                {% elif 'pediatric' in dept.lower or 'child' in dept.lower %}
+                  <i class="fas fa-baby"></i>
+                {% elif 'dental' in dept.lower or 'tooth' in dept.lower %}
+                  <i class="fas fa-tooth"></i>
+                {% elif 'eye' in dept.lower or 'ophthal' in dept.lower %}
+                  <i class="fas fa-eye"></i>
+                {% elif 'emergency' in dept.lower %}
+                  <i class="fas fa-ambulance"></i>
+                {% elif 'surgery' in dept.lower %}
+                  <i class="fas fa-procedures"></i>
+                {% elif 'radiology' in dept.lower or 'x-ray' in dept.lower %}
+                  <i class="fas fa-x-ray"></i>
+                {% elif 'pharmacy' in dept.lower or 'medicine' in dept.lower %}
+                  <i class="fas fa-pills"></i>
+                {% elif 'lab' in dept.lower or 'pathology' in dept.lower %}
+                  <i class="fas fa-flask"></i>
+                {% elif 'skin' in dept.lower or 'derma' in dept.lower %}
+                  <i class="fas fa-hand-paper"></i>
+                {% elif 'mental' in dept.lower or 'psych' in dept.lower %}
+                  <i class="fas fa-head-side-virus"></i>
+                {% else %}
+                  <i class="fas fa-stethoscope"></i>
+                {% endif %}
+              </div>
+              <div class="department-name">{{ dept }}</div>
+              <div class="department-description">
+                {% if 'cardio' in dept.lower or 'heart' in dept.lower %}
+                  Specialized care for heart and cardiovascular conditions
+                {% elif 'neuro' in dept.lower or 'brain' in dept.lower %}
+                  Treatment of nervous system and brain disorders
+                {% elif 'ortho' in dept.lower or 'bone' in dept.lower %}
+                  Bone, joint, and musculoskeletal care
+                {% elif 'pediatric' in dept.lower or 'child' in dept.lower %}
+                  Dedicated healthcare for children and infants
+                {% elif 'dental' in dept.lower or 'tooth' in dept.lower %}
+                  Comprehensive oral and dental health services
+                {% elif 'eye' in dept.lower or 'ophthal' in dept.lower %}
+                  Eye care and vision treatment services
+                {% elif 'emergency' in dept.lower %}
+                  24/7 emergency and critical care services
+                {% elif 'surgery' in dept.lower %}
+                  Advanced surgical procedures and operations
+                {% elif 'radiology' in dept.lower or 'x-ray' in dept.lower %}
+                  Medical imaging and diagnostic services
+                {% elif 'pharmacy' in dept.lower or 'medicine' in dept.lower %}
+                  Medication dispensing and pharmaceutical care
+                {% elif 'lab' in dept.lower or 'pathology' in dept.lower %}
+                  Laboratory testing and diagnostic services
+                {% elif 'skin' in dept.lower or 'derma' in dept.lower %}
+                  Skin, hair, and nail condition treatment
+                {% elif 'mental' in dept.lower or 'psych' in dept.lower %}
+                  Mental health and psychological care services
+                {% else %}
+                  Professional medical care and treatment services
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="card modern-card">
+        <div class="card-body">
+          <div class="empty-state">
+            <i class="fas fa-hospital-alt"></i>
+            <h4 class="text-muted mt-3">No Departments Available!</h4>
+            <p class="text-muted">Please check back later or contact administration.</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

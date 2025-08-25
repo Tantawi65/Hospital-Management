@@ -1,0 +1,176 @@
+{% extends 'hospital/patient_base.html' %}
+{% block content %}
+{% load static %}
+
+<style media="screen">
+    a:link { text-decoration: none; }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #495057;
+    }
+    
+    .page-title h2 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-title p {
+      font-size: 1rem;
+      color: #6c757d;
+    }
+    
+    .modern-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .modern-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modern-table th {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      text-align: center;
+      vertical-align: middle;
+    }
+    
+    .modern-table td {
+      text-align: center;
+      vertical-align: middle;
+      border-color: #e9ecef;
+    }
+    
+    .modern-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .btn-modern {
+      border-radius: 8px;
+      font-weight: 500;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-modern:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .status-approved {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .status-completed {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .status-cancelled {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+</style>
+
+<div class="dashboard-main">
+  <div class="dashboard-content">
+    <div class="page-title">
+      <h2><i class="fas fa-calendar-check"></i> My Appointments</h2>
+      <p>View and manage your scheduled appointments</p>
+    </div>
+    
+    <div class="container-fluid">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      
+      <div class="card modern-card">
+        <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-calendar-alt me-2"></i>Your Appointment Schedule
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          {% if appointments %}
+          <div class="table-responsive">
+            <table class="table table-hover modern-table mb-0">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-user-md me-1"></i>Doctor Name</th>
+                  <th><i class="fas fa-file-medical me-1"></i>Description</th>
+                  <th><i class="fas fa-calendar me-1"></i>Date & Time</th>
+                  <th><i class="fas fa-info-circle me-1"></i>Status</th>
+                  <th><i class="fas fa-cogs me-1"></i>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for a in appointments %}
+                <tr>
+                  <td><strong>{{ a.doctorName }}</strong></td>
+                  <td>{{ a.description }}</td>
+                  <td>{{ a.appointmentDate|date:"d M Y, H:i" }}</td>
+                  <td>
+                    <span class="badge status-badge status-{% if a.status == 'Pending' %}pending{% elif a.status == 'Approved' %}approved{% elif a.status == 'Completed' %}completed{% else %}cancelled{% endif %}">
+                      {{ a.status }}
+                    </span>
+                  </td>
+                  <td>
+                    {% if a.status != 'Cancelled' and a.status != 'Completed' %}
+                      <a class="btn btn-warning btn-modern btn-sm" href="{% url 'patient-reschedule-appointment' a.id %}">
+                        <i class="fas fa-edit me-1"></i>Reschedule
+                      </a>
+                      <a class="btn btn-danger btn-modern btn-sm" href="{% url 'patient-cancel-appointment' a.id %}">
+                        <i class="fas fa-times me-1"></i>Cancel
+                      </a>
+                    {% else %}
+                      <span class="text-muted">No actions available</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-calendar-times text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">No Appointments Found!</h4>
+            <p class="text-muted">You haven't scheduled any appointments yet. <a href="{% url 'patient-book-appointment' %}">Book your first appointment</a></p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,113 @@
+{% extends 'hospital/doctor_base.html' %}
+{% block content %}
+{%load static%}
+
+<style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #495057;
+    }
+    
+    .page-title h2 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-title p {
+      font-size: 1rem;
+      color: #6c757d;
+    }
+    
+    .modern-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .modern-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modern-table th {
+      background: linear-gradient(135deg, #fd7e14 0%, #f093fb 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      text-align: center;
+      vertical-align: middle;
+    }
+    
+    .modern-table td {
+      text-align: center;
+      vertical-align: middle;
+      border-color: #e9ecef;
+    }
+    
+    .modern-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }  </style>
+
+<div class="dashboard-main">
+  <div class="dashboard-content">
+    <div class="page-title">
+      <h2><i class="fas fa-sign-out-alt"></i> Discharged Patients</h2>
+      <p>View all patients you have successfully discharged</p>
+    </div>
+    
+    <div class="container-fluid">
+      <div class="card modern-card">
+        <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #fd7e14 0%, #f093fb 100%);">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-user-check me-2"></i>Discharged Patient Records
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          {% if dischargedpatients %}
+          <div class="table-responsive">
+            <table class="table table-hover modern-table mb-0">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-user me-1"></i>Name</th>
+                  <th><i class="fas fa-calendar-plus me-1"></i>Admit Date</th>
+                  <th><i class="fas fa-calendar-minus me-1"></i>Release Date</th>
+                  <th><i class="fas fa-stethoscope me-1"></i>Symptoms</th>
+                  <th><i class="fas fa-phone me-1"></i>Mobile</th>
+                  <th><i class="fas fa-map-marker-alt me-1"></i>Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for p in dischargedpatients %}
+                <tr>
+                  <td><strong>{{ p.patientName }}</strong></td>
+                  <td>{{ p.admitDate|date:"d M Y" }}</td>
+                  <td>{{ p.releaseDate|date:"d M Y" }}</td>
+                  <td>{{ p.symptoms }}</td>
+                  <td>{{ p.mobile }}</td>
+                  <td>{{ p.address }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-user-times text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">No Discharged Patients Found!</h4>
+            <p class="text-muted">Discharged patients will appear here once you process their discharge.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

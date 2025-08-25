@@ -1,0 +1,463 @@
+{% extends 'hospital/patient_base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .discharge-page {
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .discharge-header {
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px 15px 0 0;
+        margin-bottom: 0;
+        box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+    }
+
+    .discharge-content {
+        background: white;
+        border-radius: 0 0 15px 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        min-height: 600px;
+    }
+
+    .invoice-container {
+        background: white;
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        border: 2px solid #f8f9fa;
+    }
+
+    .invoice-header {
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .invoice-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .invoice-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+
+    .info-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+    }
+
+    .info-value {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+
+    .patient-info, .doctor-info {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        color: #9b59b6;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title i {
+        margin-right: 0.5rem;
+    }
+
+    .symptoms-section {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .symptoms-title {
+        color: #856404;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .symptoms-text {
+        color: #6c757d;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .billing-table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .billing-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .billing-table thead th {
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        color: white;
+        padding: 1.2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .billing-table tbody td {
+        padding: 1rem 1.2rem;
+        border-bottom: 1px solid #e9ecef;
+        color: #495057;
+    }
+
+    .billing-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .billing-table .item-row {
+        transition: all 0.3s ease;
+    }
+
+    .billing-table .total-row {
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .billing-table .total-row td {
+        border-top: 3px solid #28a745;
+        padding: 1.5rem 1.2rem;
+    }
+
+    .download-section {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .btn-download {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2.5rem;
+        color: white;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .not-discharged {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+    }
+
+    .not-discharged i {
+        font-size: 5rem;
+        color: #ffc107;
+        margin-bottom: 2rem;
+    }
+
+    .not-discharged h3 {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .not-discharged h4 {
+        color: #28a745;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+    }
+
+    .not-discharged p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .treatment-progress {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border: 2px solid #28a745;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .progress-title {
+        color: #155724;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .progress-text {
+        color: #155724;
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+        .discharge-header {
+            padding: 1.5rem;
+        }
+        
+        .discharge-content {
+            padding: 1.5rem;
+        }
+        
+        .invoice-container {
+            padding: 1.5rem;
+        }
+        
+        .invoice-title {
+            font-size: 2rem;
+        }
+        
+        .info-row {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .billing-table {
+            font-size: 0.9rem;
+        }
+        
+        .billing-table thead th,
+        .billing-table tbody td {
+            padding: 0.75rem 0.5rem;
+        }
+    }
+</style>
+
+<div class="discharge-page">
+    <div class="container">
+        <!-- Discharge Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="discharge-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">
+                                <i class="fas fa-file-invoice me-3"></i>
+                                Discharge Summary
+                            </h2>
+                            <p class="mb-0 opacity-75">Patient discharge details and billing information</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="fas fa-hospital" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discharge Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="discharge-content">
+                    {% if is_discharged %}
+                        <!-- Invoice Container -->
+                        <div class="invoice-container">
+                            <!-- Invoice Header -->
+                            <div class="invoice-header">
+                                <h1 class="invoice-title">Hospital Management</h1>
+                                <p class="invoice-subtitle">Patient Discharge Invoice</p>
+                            </div>
+
+                            <!-- Date Information -->
+                            <div class="info-section">
+                                <div class="info-row">
+                                    <span class="info-label">
+                                        <i class="fas fa-calendar-plus me-2"></i>Admit Date
+                                    </span>
+                                    <span class="info-value">{{ admitDate }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">
+                                        <i class="fas fa-calendar-check me-2"></i>Release Date
+                                    </span>
+                                    <span class="info-value">{{ releaseDate }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">
+                                        <i class="fas fa-clock me-2"></i>Days Spent
+                                    </span>
+                                    <span class="info-value">{{ daySpent }} days</span>
+                                </div>
+                            </div>
+
+                            <!-- Patient and Doctor Information -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="patient-info">
+                                        <h5 class="section-title">
+                                            <i class="fas fa-user"></i>Patient Information
+                                        </h5>
+                                        <div class="info-row">
+                                            <span class="info-label">Name</span>
+                                            <span class="info-value">{{ patientName }}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">Mobile</span>
+                                            <span class="info-value">{{ mobile }}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">Address</span>
+                                            <span class="info-value">{{ address }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="doctor-info">
+                                        <h5 class="section-title">
+                                            <i class="fas fa-user-md"></i>Assigned Doctor
+                                        </h5>
+                                        <div class="info-row">
+                                            <span class="info-label">Doctor Name</span>
+                                            <span class="info-value">{{ assignedDoctorName }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Symptoms Section -->
+                            <div class="symptoms-section">
+                                <h5 class="symptoms-title">
+                                    <i class="fas fa-stethoscope me-2"></i>Disease and Symptoms
+                                </h5>
+                                <p class="symptoms-text">{{ symptoms }}</p>
+                            </div>
+
+                            <!-- Billing Table -->
+                            <div class="billing-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><i class="fas fa-list me-2"></i>Description</th>
+                                            <th><i class="fas fa-pound-sign me-2"></i>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="item-row">
+                                            <td>
+                                                <i class="fas fa-bed me-2 text-primary"></i>
+                                                Room Charge ({{ daySpent }} days)
+                                            </td>
+                                            <td>£{{ roomCharge }}</td>
+                                        </tr>
+                                        <tr class="item-row">
+                                            <td>
+                                                <i class="fas fa-user-md me-2 text-success"></i>
+                                                Doctor Fee
+                                            </td>
+                                            <td>£{{ doctorFee }}</td>
+                                        </tr>
+                                        <tr class="item-row">
+                                            <td>
+                                                <i class="fas fa-pills me-2 text-warning"></i>
+                                                Medicine Cost
+                                            </td>
+                                            <td>£{{ medicineCost }}</td>
+                                        </tr>
+                                        <tr class="item-row">
+                                            <td>
+                                                <i class="fas fa-plus me-2 text-info"></i>
+                                                Other Charges
+                                            </td>
+                                            <td>£{{ OtherCharge }}</td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <td><strong>Total Amount</strong></td>
+                                            <td><strong>£{{ total }}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Download Section -->
+                            <div class="download-section">
+                                <a href="{% url 'download_pdf_view' patient.id %}" class="btn-download">
+                                    <i class="fas fa-download me-2"></i>
+                                    Download Invoice PDF
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Not Discharged Section -->
+                        <div class="not-discharged">
+                            <i class="fas fa-hospital-user"></i>
+                            <h3>You Are Not Discharged Yet</h3>
+                            <h4>Your Treatment Is In Progress</h4>
+                            <p>When you are discharged by the hospital, you will be able to download your invoice from here.</p>
+                            
+                            <div class="treatment-progress">
+                                <h6 class="progress-title">
+                                    <i class="fas fa-heartbeat me-2"></i>Treatment Status
+                                </h6>
+                                <p class="progress-text">Your medical team is working hard to ensure your recovery. Please follow all medical instructions and take prescribed medications regularly.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

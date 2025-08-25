@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Admin Signup | Hospital Management</title>
+  
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .dark-mode {
+      background: #121212;
+      color: #ddd;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dark-mode .card {
+      background: #1e1e1e;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .dark-mode .card:hover {
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    .dark-mode h2 {
+      color: #66b3ff;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border 0.3s ease;
+    }
+
+    .dark-mode .form-control {
+      background: #333;
+      border: 1px solid #666;
+      color: #ddd;
+    }
+
+    .form-control:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #007bff;
+      color: white;
+      border: none;
+    }
+
+    .dark-mode .btn-primary {
+      background: #0056b3;
+    }
+
+    .btn-primary:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .dark-mode .btn-primary:hover {
+      background: #004494;
+    }
+
+    .login-link {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .dark-mode .login-link a {
+      color: #66b3ff;
+    }
+  </style>
+</head>
+
+<body>
+  {% include "hospital/navbar.html" %}
+  
+  <div class="container">
+    <div class="card">
+      <h2>Admin Signup</h2>
+      <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          {% render_field form.first_name class="form-control" placeholder="First Name" %}
+        </div>
+
+        <div class="form-group">
+          {% render_field form.last_name class="form-control" placeholder="Last Name" %}
+        </div>
+
+        <div class="form-group">
+          {% render_field form.username class="form-control" placeholder="Username" %}
+        </div>
+
+        <div class="form-group">
+          {% render_field form.password class="form-control" placeholder="Password" %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Signup</button>
+
+        <div class="login-link">
+          Already have an account? <a href="adminlogin">Login here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% include "hospital/footer.html" %}
+</body>
+
+</html>

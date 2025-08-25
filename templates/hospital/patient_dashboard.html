@@ -1,0 +1,12 @@
+{% extends 'hospital/patient_base.html' %}
+{% load static %}
+
+{% block main_class %}dashboard-main{% endblock %}
+
+{% block show_footer %}
+<!-- Footer hidden for dashboard -->
+{% endblock show_footer %}
+
+{% block content %}
+{%include 'hospital/patient_dashboard_cards.html'%}
+{% endblock content %}

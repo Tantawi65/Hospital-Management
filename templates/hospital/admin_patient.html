@@ -1,0 +1,148 @@
+{% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+  <style type="text/css">
+    a:link { text-decoration: none; }
+    
+    .container {
+      padding: 2rem;
+      max-width: 1200px;
+    }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: #495057;
+    }
+    
+    .page-title h2 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-title p {
+      font-size: 1.1rem;
+      color: #6c757d;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-block {
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .card h6 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .card i {
+      font-size: 3rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 1rem;
+    }
+    
+    .bg-c-blue {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .bg-c-green {
+      background: linear-gradient(135deg, #2ed8b6 0%, #59e0c5 100%);
+    }
+    
+    .bg-c-yellow {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .bg-c-pink {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .order-card a {
+      color: white;
+      text-decoration: none;
+    }
+    
+    .order-card a:hover {
+      color: white;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="page-title">
+    <h2><i class="fas fa-user-injured"></i> Patient Management</h2>
+    <p>Manage patient records, admissions, approvals, and discharges</p>
+  </div>
+  
+  <div class="row">
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-c-blue order-card">
+        <div class="card-block">
+          <a href="/admin-view-patient">
+            <i class="fas fa-user-injured"></i>
+            <h6>Patient Record</h6>
+            <p class="text-white-50">View all patient records and details</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-c-green order-card">
+        <div class="card-block">
+          <a href="/admin-add-patient">
+            <i class="fas fa-user-plus"></i>
+            <h6>Admit Patient</h6>
+            <p class="text-white-50">Add new patients to the hospital</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-c-yellow order-card">
+        <div class="card-block">
+          <a href="/admin-approve-patient">
+            <i class="fas fa-check-circle"></i>
+            <h6>Approve Patient</h6>
+            <p class="text-white-50">Review and approve patient registrations</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card bg-c-pink order-card">
+        <div class="card-block">
+          <a href="{% url 'admin-list-patients-for-discharge' %}">
+            <i class="fas fa-sign-out-alt"></i>
+            <h6>Discharge Patient</h6>
+            <p class="text-white-50">Process patient discharges and billing</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

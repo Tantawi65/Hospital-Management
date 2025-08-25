@@ -1,0 +1,98 @@
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      height: 80px;
+      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+      color: #fff;
+      font-weight: bold;
+      line-height: 80px;
+    }
+
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+    }
+
+    .menu {
+      top: 50px;
+    }
+
+    .help-text {
+      font-size: 0.9em;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+  </style>
+
+</head>
+<br><br>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="container register-form">
+    <div class="form">
+      <div class="note">
+        <p>{% if department %}Update Department{% else %}Add New Department{% endif %}</p>
+      </div>
+      <div class="form-content">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center">
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              {% render_field form.department_id class="form-control" placeholder="Department ID" %}
+              <div class="help-text">{{ form.department_id.help_text }}</div>
+            </div>
+            <div class="form-group">
+              {% render_field form.head_of_department class="form-control" placeholder="Head of Department" %}
+              <div class="help-text">{{ form.head_of_department.help_text }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              {% render_field form.name class="form-control" placeholder="Name" %}
+              <div class="help-text">{{ form.name.help_text }}</div>
+            </div>
+            <div class="form-group">
+              {% render_field form.services_offered class="form-control" placeholder="Services Offered (comma-separated)" %}
+              <div class="help-text">{{ form.services_offered.help_text }}</div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btnSubmit">{% if department %}Update{% else %}Save{% endif %}</button>
+        <a href="{% url 'admin-view-departments' %}" class="btnSubmit">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock content %}

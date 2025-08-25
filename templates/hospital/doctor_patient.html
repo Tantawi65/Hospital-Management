@@ -1,0 +1,113 @@
+{% extends 'hospital/doctor_base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="page-title">
+    <h2><i class="fas fa-user-injured"></i> Patient Management</h2>
+    <p>Manage your assigned patients and discharge records</p>
+  </div>
+  
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card bg-c-blue order-card">
+        <div class="card-block">
+          <a href="/doctor-view-patient">
+            <i class="fas fa-user-injured"></i>
+            <h6>Patient Records</h6>
+            <p class="text-white-50">View and manage your assigned patients</p>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card bg-c-pink order-card">
+        <div class="card-block">
+          <a href="/doctor-view-discharge-patient">
+            <i class="fas fa-sign-out-alt"></i>
+            <h6>Discharged Patients</h6>
+            <p class="text-white-50">Review patients who have been discharged</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  a:link { text-decoration: none; }
+  
+  .container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .page-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #495057;
+  }
+  
+  .page-title h2 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .page-title p {
+    font-size: 1.1rem;
+    color: #6c757d;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-block {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .card h6 {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .card i {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
+  }
+  
+  .bg-c-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .bg-c-pink {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  
+  .order-card a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .order-card a:hover {
+    color: white;
+    text-decoration: none;
+  }
+</style>
+{% endblock content %}

@@ -1,0 +1,151 @@
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link { text-decoration: none; }
+    
+    .container {
+      padding: 2rem;
+      max-width: 800px;
+    }
+    
+    .form-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    
+    .form-header {
+      background: linear-gradient(90deg, #00c4b4 0%, #008e7d 100%);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin: 0;
+    }
+    
+    .form-header h2 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    
+    .form-content {
+      padding: 2rem;
+    }
+    
+    .form-control {
+      border-radius: 10px;
+      border: 2px solid #e1e5e9;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: #00c4b4;
+      box-shadow: 0 0 0 0.2rem rgba(0, 196, 180, 0.25);
+    }
+    
+    .btn-submit {
+      background: linear-gradient(90deg, #00c4b4 0%, #008e7d 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 1rem 2rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    .btn-submit:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Admit Patient To Hospital</h2>
+    </div>
+    <div class="form-content">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+            </div>
+            <div class="form-group">
+              {% render_field userForm.username class="form-control" placeholder="Username" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientForm.address class="form-control" placeholder="Address" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientForm.email class="form-control" placeholder="Email Address" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientForm.age class="form-control" placeholder="Age" type="number" %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
+            </div>
+            <div class="form-group">
+              {% render_field userForm.password class="form-control" placeholder="Password" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientForm.mobile class="form-control" placeholder="Mobile" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientForm.symptoms class="form-control" placeholder="Symptoms" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientForm.gender class="form-control" placeholder="Gender" %}
+            </div>
+          </div>
+        </div>        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Profile Picture</label>
+              {% render_field patientForm.profile_pic class="form-control" %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Assigned Doctor</label>
+              {% render_field patientForm.assignedDoctorId class="form-control" %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Ward/Room</label>
+              <select name="ward_room" class="form-control">
+                <option value="">Select Ward/Room</option>
+                {% for room in available_rooms %}
+                  <option value="{{ room.room_id }}">{{ room.room_id }} ({{ room.type }})</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn-submit">
+            <i class="fas fa-user-plus"></i> Admit Patient
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

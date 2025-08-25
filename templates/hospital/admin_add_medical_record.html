@@ -1,0 +1,12 @@
+{% extends "hospital/admin_base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Add Medical Record</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save Record</button>
+        <a href="{% url 'admin_view_medical_records' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

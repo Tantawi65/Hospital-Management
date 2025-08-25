@@ -1,0 +1,137 @@
+{% extends 'hospital/doctor_base.html' %}
+{% load static %}
+{% load widget_tweaks %}  <!-- Add this line -->
+
+{% block content %}
+<style media="screen">
+    .panel-primary {
+      border-color: #337ab7;
+    }
+    .panel-primary > .panel-heading {
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #337ab7;
+    }
+    .btn-primary {
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #2e6da4;
+    }
+    .btn-primary:hover {
+      background-color: #286090;
+      border-color: #204d74;
+    }
+    .btn-danger {
+      color: #fff;
+      background-color: #d9534f;
+      border-color: #d43f3a;
+    }
+    .btn-danger:hover {
+      background-color: #c9302c;
+      border-color: #ac2925;
+    }
+    .formset-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .formset-row input {
+      flex: 1;
+    }
+  </style>
+  <script>
+    $(document).ready(function() {
+      $("#add-row").click(function() {
+        var formCount = $('.formset-row').length;
+        var newRow = $('.formset-row:first').clone();
+        newRow.find('input').each(function() {
+          var name = $(this).attr('name').replace('-0-', '-' + formCount + '-');
+          $(this).attr('name', name).val('');
+        });
+        newRow.insertBefore('#add-row');
+        var totalForms = parseInt($('#id_form-TOTAL_FORMS').val());
+        $('#id_form-TOTAL_FORMS').val(totalForms + 1);
+      });
+
+      $('form').submit(function() {
+        var quantities = $('#id_treatment_quantities').val().trim();
+        if (quantities && quantities !== '[]') {
+          try {
+            var quantitiesList = JSON.parse(quantities);
+            if (!Array.isArray(quantitiesList)) {
+              alert('Quantities must be a list of numbers, e.g., [2, 1].');
+              return false;
+            }
+            if (quantitiesList.length !== $('#id_prescribed_treatment option:selected').length) {
+              alert('Number of quantities must match the number of selected medicines.');
+              return false;
+            }
+            for (var i = 0; i < quantitiesList.length; i++) {
+              if (isNaN(quantitiesList[i]) || quantitiesList[i] <= 0) {
+                alert('Each quantity must be a positive number.');
+                return false;
+              }
+            }
+          } catch (e) {
+            alert('Invalid JSON format for quantities. Use [2, 1].');
+            return false;
+          }
+        }
+      });
+    });  </script>
+
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Edit Medical Record {{ record.record_id }}</h6>
+    </div>
+    <div class="panel-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          {{ form.diagnosis.label_tag }}
+          {{ form.diagnosis|add_class:"form-control" }}
+          {% if form.diagnosis.errors %}
+            <span class="text-danger">{{ form.diagnosis.errors }}</span>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          {{ form.prescribed_treatment.label_tag }}
+          {{ form.prescribed_treatment|add_class:"form-control" }}
+          {% if form.prescribed_treatment.errors %}
+            <span class="text-danger">{{ form.prescribed_treatment.errors }}</span>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          {{ form.treatment_quantities.label_tag }}
+          <p class="text-muted">Enter quantities as a JSON list, e.g., [2, 1] (one number per selected medicine in order)</p>
+          {{ form.treatment_quantities|add_class:"form-control" }}
+          {% if form.treatment_quantities.errors %}
+            <span class="text-danger">{{ form.treatment_quantities.errors }}</span>
+          {% endif %}
+        </div>
+        <h6>Test Results</h6>
+        {{ test_result_formset.management_form }}
+        {% for test_form in test_result_formset %}
+          <div class="formset-row">
+            {{ test_form.test|add_class:"form-control" }}
+            {{ test_form.result|add_class:"form-control" }}
+          </div>
+        {% endfor %}
+        <button type="button" id="add-row" class="btn btn-success" style="margin-bottom: 20px;">Add Another Test</button>
+        <div style="text-align: center; margin-top: 20px;">
+          <button type="submit" class="btn btn-primary">Update Record</button>
+          <a href="{% url 'doctor_view_medical_records' record.patient.id %}" class="btn btn-danger">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

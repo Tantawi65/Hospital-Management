@@ -1,0 +1,52 @@
+{% extends "hospital/admin_base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">All Medical Records</h2>
+    <a href="{% url 'admin_add_medical_record' %}" class="btn btn-primary mb-3">Add New Record</a>
+    {% if medical_records %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Record ID</th>
+                <th>Patient</th>
+                <th>Date</th>
+                <th>Diagnosis</th>
+                <th>Treatment</th>
+                <th>Test Results</th>
+                <th>Doctor</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in medical_records %}
+            <tr>
+                <td>{{ record.record_id }}</td>
+                <td>{{ record.patient.get_name }}</td>
+                <td>{{ record.created_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ record.diagnosis }}</td>
+                <td>{{ record.prescribed_treatment|default:"None" }}</td>
+                <td>
+                    {% if record.test_results %}
+                        <ul>
+                        {% for result in record.test_results %}
+                            <li>{{ result.test }}: {{ result.result }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+                <td>{{ record.doctor.get_name|default:"N/A" }}</td>
+                <td>
+                    <a href="{% url 'edit_medical_record' record.record_id %}" class="btn btn-primary btn-sm">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No medical records found.</p>
+    {% endif %}
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}

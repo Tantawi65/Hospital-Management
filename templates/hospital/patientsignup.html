@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Patient Signup | Hospital</title>
+
+  <!-- Bootstrap 4 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <style>
+    body {
+      background-color: #f4f7fc;
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .signup-container {
+      max-width: 600px;
+      margin: auto;
+      margin-top: 5%;
+      padding: 30px;
+      background: white;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .signup-title {
+      text-align: center;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 20px;
+      transition: color 0.3s;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 16px;
+      transition: background 0.3s, color 0.3s, border 0.3s;
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .btn-register:hover {
+      background: #0056b3;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .login-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Profile Picture Input Fix */
+    .custom-file-label {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding-right: 10px;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    .dark-mode .signup-container {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-mode .signup-title {
+      color: #1e90ff;
+    }
+
+    .dark-mode .form-control {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .dark-mode .btn-register {
+      background: #1e90ff;
+    }
+
+    .dark-mode .btn-register:hover {
+      background: #007acc;
+    }
+
+    /* Ensure the dropdown is fully visible */
+    .form-group select.form-control {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Ensure dark mode compatibility */
+    .dark-mode select.form-control {
+      background-color: #333 !important;
+      color: #fff !important;
+      border: 1px solid #555 !important;
+    }
+
+    /* Fix padding & dropdown icon */
+    .form-group select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="black" d="M2 0L0 2h4z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  {% include "hospital/navbar.html" %}
+
+  <div class="container">
+    <div class="signup-container">
+      <h2 class="signup-title">Register to Hospital</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+        </div>
+        <div class="form-group">
+          {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
+        </div>
+        <div class="form-group">
+          {% render_field userForm.username class="form-control" placeholder="Username" %}
+        </div>
+        <div class="form-group">
+          {% render_field userForm.password class="form-control" placeholder="Password" %}
+        </div>
+        <div class="form-group">
+          {% render_field patientForm.mobile class="form-control" placeholder="Mobile Number" %}
+        </div>
+        <div class="form-group">
+          {% render_field patientForm.email class="form-control" placeholder="Email Address" %}
+        </div>
+        <div class="form-group">
+          {% render_field patientForm.address class="form-control" placeholder="Address" %}
+        </div>
+        <div class="form-group">
+          {% render_field patientForm.symptoms class="form-control" placeholder="Symptoms" %}
+        </div>
+        <div class="form-group">
+          {% render_field patientForm.age class="form-control" placeholder="Age" type="number" %}
+        </div>
+        <div class="form-group">
+          {% render_field patientForm.gender class="form-control" %}
+        </div>
+        <div class="form-group">
+          <label>Profile Picture</label>
+          <div class="custom-file">
+            {% render_field patientForm.profile_pic class="custom-file-input" required="required" %}
+            <label class="custom-file-label">Choose file</label>
+          </div>
+        </div>
+        <div class="form-group">
+          {% render_field patientForm.assignedDoctorId class="form-control" %}
+        </div>
+        <button type="submit" class="btn btn-register">Register</button>
+      </form>
+      <div class="login-link">
+        <p>Already have an account? <a href="patientlogin">Login here</a></p>
+      </div>
+    </div>
+  </div>
+
+  {% include "hospital/footer.html" %}
+</body>
+
+</html>

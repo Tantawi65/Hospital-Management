@@ -1,0 +1,133 @@
+{% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block content %}
+{% include 'hospital/admin_dashboard_cards.html' %}
+<br><br><br><br>
+
+<div class="container">  <div class="row g-4">
+    <!-- Recent Doctors -->
+    <div class="col-md-6">
+      <div class="card shadow-lg h-100" style="border: none; border-radius: 15px; overflow: hidden;">
+        <div class="card-header text-center" style="background: linear-gradient(90deg, #00c4b4 0%, #008e7d 100%); color: #fff; padding: 1rem;">
+          <h5 class="card-title mb-0" style="font-size: 0.9rem; font-weight: 600;">Recent Doctors</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0" id="dev-table">
+              <thead style="background: #f8f9fa;">
+                <tr>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Name</th>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Department</th>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Mobile</th>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for d in doctors %}
+                <tr>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">{{ d.get_name }}</td>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">{{ d.department }}</td>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">{{ d.mobile }}</td>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">
+                    {% if d.status %}
+                      <span class="badge bg-primary" style="font-size: 0.6rem; padding: 0.25rem 0.5rem;">Permanent</span>
+                    {% else %}
+                      <span class="badge bg-success" style="font-size: 0.6rem; padding: 0.25rem 0.5rem;">On Hold</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Patients -->
+    <div class="col-md-6">
+      <div class="card shadow-lg h-100" style="border: none; border-radius: 15px; overflow: hidden;">
+        <div class="card-header text-center" style="background: linear-gradient(90deg, #00c4b4 0%, #008e7d 100%); color: #fff; padding: 1rem;">
+          <h5 class="card-title mb-0" style="font-size: 0.9rem; font-weight: 600;">Recent Patients</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0" id="dev-table">
+              <thead style="background: #f8f9fa;">
+                <tr>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Name</th>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Symptoms</th>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Mobile</th>
+                  <th style="font-size: 0.7rem; padding: 0.5rem;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for p in patients %}
+                <tr>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">{{ p.get_name }}</td>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">{{ p.symptoms }}</td>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">{{ p.mobile }}</td>
+                  <td style="font-size: 0.7rem; padding: 0.5rem;">
+                    {% if p.status %}
+                      <span class="badge bg-primary" style="font-size: 0.6rem; padding: 0.25rem 0.5rem;">Admitted</span>
+                    {% else %}
+                      <span class="badge bg-success" style="font-size: 0.6rem; padding: 0.25rem 0.5rem;">On Hold</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: #e9f7f6;
+  }
+
+  @media (max-width: 768px) {
+    .card-header h5 {
+      font-size: 0.8rem;
+    }
+
+    .table th,
+    .table td {
+      font-size: 0.6rem;
+      padding: 0.4rem;
+    }
+
+    .badge {
+      font-size: 0.6rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .card-header h5 {
+      font-size: 0.75rem;
+    }
+
+    .table th,
+    .table td {
+      font-size: 0.55rem;
+      padding: 0.3rem;
+    }
+
+    .badge {
+      font-size: 0.5rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
+</style>
+
+{% endblock content %}

@@ -1,0 +1,140 @@
+{% extends 'hospital/doctor_base.html' %}
+{% block content %}
+{% load static %}
+
+<style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #495057;
+    }
+    
+    .page-title h2 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-title p {
+      font-size: 1rem;
+      color: #6c757d;
+    }
+    
+    .modern-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .modern-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modern-table th {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      text-align: center;
+      vertical-align: middle;
+    }
+    
+    .modern-table td {
+      text-align: center;
+      vertical-align: middle;
+      border-color: #e9ecef;
+    }
+    
+    .modern-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .status-completed {
+      color: #28a745;
+      font-weight: bold;
+    }  </style>
+
+<div class="dashboard-main">
+  <div class="dashboard-content">
+    <div class="page-title">
+      <h2><i class="fas fa-check-circle"></i> Completed Appointments</h2>
+      <p>View all successfully completed patient appointments</p>
+    </div>
+    
+    <div class="container-fluid">      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      
+      <div class="card modern-card">
+        <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-clipboard-check me-2"></i>Completed Appointments History
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          {% if appointments %}
+          <div class="table-responsive">
+            <table class="table table-hover modern-table mb-0">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-user me-1"></i>Patient Name</th>
+                  <th><i class="fas fa-image me-1"></i>Picture</th>
+                  <th><i class="fas fa-file-medical me-1"></i>Description</th>
+                  <th><i class="fas fa-phone me-1"></i>Mobile</th>
+                  <th><i class="fas fa-map-marker-alt me-1"></i>Address</th>
+                  <th><i class="fas fa-calendar me-1"></i>Date & Time</th>
+                  <th><i class="fas fa-check-circle me-1"></i>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for a, p in appointments %}
+                <tr>
+                  <td><strong>{{ a.patientName }}</strong></td>
+                  <td>
+                    {% if p and p.profile_pic %}
+                      <img src="{{ p.profile_pic.url }}" alt="Profile" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;" />
+                    {% else %}
+                      <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="height: 40px; width: 40px;">
+                        <i class="fas fa-user text-white"></i>
+                      </div>
+                    {% endif %}
+                  </td>
+                  <td>{{ a.description }}</td>
+                  <td>{{ p.mobile|default:"N/A" }}</td>
+                  <td>{{ p.address|default:"N/A" }}</td>
+                  <td>{{ a.appointmentDate|date:"d M Y, H:i" }}</td>
+                  <td>
+                    <span class="badge bg-success">
+                      <i class="fas fa-check me-1"></i>{{ a.status }}
+                    </span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-calendar-times text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">No Completed Appointments Found!</h4>
+            <p class="text-muted">Completed appointments will appear here once you mark them as finished.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

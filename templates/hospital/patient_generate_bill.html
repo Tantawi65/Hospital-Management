@@ -1,0 +1,383 @@
+{% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+  <meta charset="utf-8">
+  <title>Generate Patient Bill - Hospital Management</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .bill-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .bill-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .bill-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .bill-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .bill-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .bill-body {
+      padding: 40px;
+    }
+
+    .info-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+      padding: 25px;
+      background: #f8f9fa;
+      border-radius: 15px;
+      border-left: 4px solid #667eea;
+    }
+
+    .info-group h5 {
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .info-group h5 i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .info-item {
+      margin-bottom: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #495057;
+      display: inline-block;
+      min-width: 120px;
+    }
+
+    .info-value {
+      color: #212529;
+    }
+
+    .symptoms-section {
+      background: #e3f2fd;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-left: 4px solid #2196f3;
+    }
+
+    .symptoms-section h5 {
+      color: #1976d2;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .symptoms-section h5 i {
+      margin-right: 10px;
+    }
+
+    .billing-table {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .table-header h4 {
+      margin: 0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .table-header h4 i {
+      margin-right: 10px;
+    }
+
+    .billing-form {
+      padding: 30px;
+    }
+
+    .bill-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s ease;
+    }
+
+    .bill-row:hover {
+      background-color: #f8f9fa;
+    }
+
+    .bill-row:last-child {
+      border-bottom: none;
+      background: #f8f9fa;
+      font-weight: 600;
+    }
+
+    .bill-item {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      color: #495057;
+    }
+
+    .bill-item i {
+      margin-right: 10px;
+      color: #667eea;
+      width: 20px;
+      text-align: center;
+    }
+
+    .bill-input {
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .bill-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .generate-btn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border: none;
+      border-radius: 15px;
+      padding: 15px 30px;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+    }
+
+    .generate-btn i {
+      margin-right: 10px;
+    }
+
+    .days-highlight {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .days-highlight h6 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .bill-container {
+        margin: 20px 10px;
+        padding: 10px;
+      }
+
+      .info-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .bill-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .bill-body {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<div class="bill-container">
+  <div class="bill-card">
+    <div class="bill-header">
+      <h1><i class="fas fa-file-invoice-dollar me-3"></i>Hospital Management</h1>
+      <p>Generate Patient Bill</p>
+    </div>
+
+    <div class="bill-body">
+      <div class="days-highlight">
+        <h6><i class="fas fa-calendar-alt me-2"></i>Treatment Duration: {{day}} Days</h6>
+      </div>
+
+      <div class="info-section">
+        <div class="info-group">
+          <h5><i class="fas fa-user-injured"></i>Patient Information</h5>
+          <div class="info-item">
+            <span class="info-label">Name:</span>
+            <span class="info-value">{{name}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Mobile:</span>
+            <span class="info-value">{{mobile}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Address:</span>
+            <span class="info-value">{{address}}</span>
+          </div>
+        </div>
+
+        <div class="info-group">
+          <h5><i class="fas fa-user-md"></i>Treatment Details</h5>
+          <div class="info-item">
+            <span class="info-label">Doctor:</span>
+            <span class="info-value">{{assignedDoctorName}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Admit Date:</span>
+            <span class="info-value">{{admitDate}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Release Date:</span>
+            <span class="info-value">{{todayDate}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="symptoms-section">
+        <h5><i class="fas fa-stethoscope"></i>Disease and Symptoms</h5>
+        <p class="mb-0">{{symptoms}}</p>
+      </div>
+
+      <div class="billing-table">
+        <div class="table-header">
+          <h4><i class="fas fa-calculator"></i>Billing Information</h4>
+        </div>
+
+        <form method="post" class="billing-form">
+          {% csrf_token %}
+          
+          <div class="bill-row">
+            <div class="bill-item">
+              <i class="fas fa-bed"></i>
+              Room Charge (Per Day)
+            </div>
+            <div>
+              <input type="number" name="roomCharge" class="bill-input" placeholder="Enter amount in Pounds" required>
+            </div>
+          </div>
+
+          <div class="bill-row">
+            <div class="bill-item">
+              <i class="fas fa-user-md"></i>
+              Doctor Fee
+            </div>
+            <div>
+              <input type="number" name="doctorFee" class="bill-input" placeholder="Enter amount in Pounds" required>
+            </div>
+          </div>
+
+          <div class="bill-row">
+            <div class="bill-item">
+              <i class="fas fa-pills"></i>
+              Medicine Cost
+            </div>
+            <div>
+              <input type="number" name="medicineCost" class="bill-input" placeholder="Enter amount in Pounds" required>
+            </div>
+          </div>
+
+          <div class="bill-row">
+            <div class="bill-item">
+              <i class="fas fa-plus-circle"></i>
+              Other Charges
+            </div>
+            <div>
+              <input type="number" name="OtherCharge" class="bill-input" placeholder="Enter amount in Pounds">
+            </div>
+          </div>
+
+          <div class="bill-row">
+            <div></div>
+            <div>
+              <button type="submit" name="submit" class="generate-btn">
+                <i class="fas fa-file-invoice"></i>
+                Generate Bill
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add some interactivity
+  document.querySelectorAll('.bill-input').forEach(input => {
+    input.addEventListener('input', function() {
+      if (this.value) {
+        this.style.borderColor = '#28a745';
+      } else {
+        this.style.borderColor = '#e9ecef';
+      }
+    });
+  });
+</script>
+
+{% endblock content %}

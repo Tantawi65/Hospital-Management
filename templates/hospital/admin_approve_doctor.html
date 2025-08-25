@@ -1,0 +1,153 @@
+{% extends 'hospital/admin_base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+  <style media="screen">
+    a:link { text-decoration: none; }
+    
+    .container {
+      padding: 2rem;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .panel-heading {
+      background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 1rem;
+      margin: 0;
+    }
+
+    .panel-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      text-align: center;
+    }
+
+    .table {
+      margin: 0;
+    }
+
+    .table th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .table td {
+      padding: 1rem;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .profile-img {
+      border-radius: 50%;
+      border: 2px solid #dee2e6;
+    }
+
+    .btn {
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+      color: white;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+      transform: translateY(-1px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #6c757d;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="panel">
+    <div class="panel-heading">
+      <h6 class="panel-title"><i class="fas fa-user-check"></i> Doctors Applied For Registration</h6>
+    </div>
+    {% if doctors %}
+    <div class="table-responsive">
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Profile Picture</th>
+            <th>Mobile</th>
+            <th>Address</th>
+            <th>Department</th>
+            <th>Approve</th>
+            <th>Reject</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in doctors %}
+          <tr>
+            <td>{{ d.get_name }}</td>
+            <td>
+              {% if d.profile_pic %}
+                <img src="{% static d.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" class="profile-img" />
+              {% else %}
+                <i class="fas fa-user-circle fa-2x text-muted"></i>
+              {% endif %}
+            </td>
+            <td>{{ d.mobile }}</td>
+            <td>{{ d.address }}</td>
+            <td>{{ d.department }}</td>
+            <td>
+              <a class="btn btn-success btn-sm" href="{% url 'approve-doctor' d.id %}" onclick="return confirm('Are you sure you want to approve this doctor?')">
+                <i class="fas fa-check"></i>
+              </a>
+            </td>
+            <td>
+              <a class="btn btn-danger btn-sm" href="{% url 'reject-doctor' d.id %}" onclick="return confirm('Are you sure you want to reject this doctor?')">
+                <i class="fas fa-times"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-inbox"></i>
+      <h5>No pending doctor applications</h5>
+      <p>All doctor applications have been processed.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock content %}

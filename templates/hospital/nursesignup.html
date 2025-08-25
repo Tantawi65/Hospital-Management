@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Nurse Signup | Hospital</title>
+
+  <!-- Bootstrap 4 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <style>
+    body {
+      background-color: #f4f7fc;
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .signup-container {
+      max-width: 600px;
+      margin: auto;
+      margin-top: 5%;
+      padding: 30px;
+      background: white;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .signup-title {
+      text-align: center;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 20px;
+      transition: color 0.3s;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 16px;
+      transition: background 0.3s, color 0.3s, border 0.3s;
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .btn-register:hover {
+      background: #0056b3;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .login-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .custom-file-label {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding-right: 10px;
+    }
+
+        /* Dark Mode */
+        body.dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    .dark-mode .signup-container {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-mode .signup-title {
+      color: #1e90ff;
+    }
+
+    .dark-mode .form-control {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .dark-mode .btn-register {
+      background: #1e90ff;
+    }
+
+    .dark-mode .btn-register:hover {
+      background: #007acc;
+    }
+
+  </style>
+</head>
+
+<body>
+  {% include "hospital/navbar.html" %}
+
+  <div class="container">
+    <div class="signup-container">
+      <h2 class="signup-title">Nurse Registration</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+        </div>
+        <div class="form-group">
+          {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
+        </div>
+        <div class="form-group">
+          {% render_field userForm.username class="form-control" placeholder="Username" %}
+        </div>
+        <div class="form-group">
+          {% render_field userForm.password class="form-control" placeholder="Password" %}
+        </div>
+        
+        <!-- Mobile Number Field -->
+        <div class="form-group">
+          {% render_field nurseForm.mobile class="form-control" placeholder="Mobile Number" %}
+        </div>
+
+        <!-- Assigned Ward -->
+        <div class="form-group">
+          {% render_field nurseForm.assigned_ward class="form-control" placeholder="Assigned Ward" %}
+        </div>
+
+        <!-- Profile Picture Upload -->
+        <div class="form-group">
+          <label>Profile Picture</label>
+          <div class="custom-file">
+            {% render_field nurseForm.profile_pic required="required" class="custom-file-input" %}
+            <label class="custom-file-label">Choose file</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-register">Register</button>
+      </form>
+
+      <div class="login-link">
+        <p>Already have an account? <a href="/nurselogin">Login here</a></p>
+      </div>
+    </div>
+  </div>
+
+  {% include "hospital/footer.html" %}
+</body>
+
+</html>

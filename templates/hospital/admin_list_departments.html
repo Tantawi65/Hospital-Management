@@ -1,0 +1,139 @@
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <style>
+    a:link {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #0072ff, #8811c5);
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+      border-radius: 10px;
+      background-color: #ffffff;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 10px 30px;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+      margin: 20px auto;
+      display: inline-block;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .btnSubmit:hover {
+      background: #004a99;
+    }
+
+    .action-buttons a {
+      margin: 0 5px;
+      padding: 6px 14px;
+      border-radius: 1.5rem;
+      color: #fff;
+      background: #0062cc;
+      display: inline-block;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .action-buttons a:hover {
+      background: #004a99;
+    }
+
+    .table-container {
+      margin-top: 20px;
+    }
+
+    .table th,
+    .table td {
+      vertical-align: middle;
+      text-align: center;
+    }
+  </style>
+
+</head>
+
+<br><br>
+
+<div class="container">
+  <div class="note">
+    Manage Departments
+  </div>
+
+  {% if messages %}
+  <div class="form-content">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} text-center">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="text-center">
+    <a href="{% url 'admin-add-department' %}" class="btnSubmit">Add New Department</a>
+  </div>
+
+  <div class="table-container">
+    <div class="form-content">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Head of Department</th>
+            <th>Number of Doctors</th>
+            <th>Services Offered</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dept in departments %}
+          <tr>
+            <td>{{ dept.department_id }}</td>
+            <td>{{ dept.name }}</td>
+            <td>{{ dept.head_of_department.get_name|default:"N/A" }}</td>
+            <td>{{ dept.list_doctors.count }}</td>
+            <td>{{ dept.list_services|join:", " }}</td>
+            <td class="action-buttons">
+              <a href="{% url 'admin-view-department' dept.department_id %}">View</a>
+              <a href="{% url 'admin-update-department' dept.department_id %}">Edit</a>
+              <a href="{% url 'admin-delete-department' dept.department_id %}">Delete</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">No departments found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

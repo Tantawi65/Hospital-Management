@@ -1,0 +1,287 @@
+{% extends 'hospital/patient_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<style>
+    .appointment-booking {
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .booking-header {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px 15px 0 0;
+        margin-bottom: 0;
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    }
+
+    .booking-content {
+        background: white;
+        border-radius: 0 0 15px 15px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        min-height: 500px;
+    }
+
+    .form-floating {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .form-control:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+        background: white;
+    }
+
+    .form-label {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .form-select:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+        background: white;
+    }
+
+    .btn-book {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-book:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #6c757d;
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-cancel:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+    }
+
+    .booking-info {
+        background: #e8f5e8;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid #2ecc71;
+    }
+
+    .booking-info h6 {
+        color: #27ae60;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .booking-info p {
+        color: #6c757d;
+        margin-bottom: 0;
+        font-size: 0.9rem;
+    }
+
+    .form-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 5;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .booking-header {
+            padding: 1.5rem;
+        }
+        
+        .booking-content {
+            padding: 1.5rem;
+        }
+        
+        .btn-book, .btn-cancel {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<div class="appointment-booking">
+    <div class="container">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="row">
+                <div class="col-12">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Booking Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="booking-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">
+                                <i class="fas fa-calendar-plus me-3"></i>
+                                Book New Appointment
+                            </h2>
+                            <p class="mb-0 opacity-75">Schedule your appointment with our medical professionals</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="fas fa-stethoscope" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="booking-content">
+                    <!-- Booking Information -->
+                    <div class="booking-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>Appointment Guidelines</h6>
+                        <p>Please provide accurate information and select your preferred doctor and time slot. We'll confirm your appointment shortly.</p>
+                    </div>
+
+                    <!-- Booking Form -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto">
+                                <!-- Description Field -->
+                                <div class="form-group">
+                                    <label for="id_description" class="form-label">
+                                        <i class="fas fa-file-alt me-2"></i>Description / Symptoms
+                                    </label>
+                                    {% render_field appointmentForm.description class="form-control" placeholder="Describe your symptoms or reason for appointment..." rows="4" %}
+                                    <i class="fas fa-edit form-icon"></i>
+                                </div>
+
+                                <!-- Doctor Selection -->
+                                <div class="form-group">
+                                    <label for="id_doctorId" class="form-label">
+                                        <i class="fas fa-user-md me-2"></i>Select Doctor
+                                    </label>
+                                    {% render_field appointmentForm.doctorId class="form-select" %}
+                                    <i class="fas fa-chevron-down form-icon"></i>
+                                </div>
+
+                                <!-- Appointment Date -->
+                                <div class="form-group">
+                                    <label for="id_appointmentDate" class="form-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Appointment Date & Time
+                                    </label>
+                                    {% render_field appointmentForm.appointmentDate class="form-control" placeholder="Select date and time" %}
+                                    <i class="fas fa-clock form-icon"></i>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="row mt-4">
+                                    <div class="col-md-6 mb-3">
+                                        <button type="submit" class="btn btn-book w-100">
+                                            <i class="fas fa-calendar-check me-2"></i>
+                                            Book Appointment
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <a href="{% url 'patient-view-appointment' %}" class="btn-cancel w-100">
+                                            <i class="fas fa-times me-2"></i>
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Help Section -->
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="card" style="border: 2px dashed #dee2e6; background: #f8f9fa;">
+                                            <div class="card-body text-center py-3">
+                                                <i class="fas fa-question-circle text-muted mb-2"></i>
+                                                <h6 class="text-muted mb-1">Need Help?</h6>
+                                                <p class="text-muted mb-0 small">Contact our support team if you need assistance with booking</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

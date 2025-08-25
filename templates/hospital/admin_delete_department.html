@@ -1,0 +1,68 @@
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      height: 80px;
+      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+      color: #fff;
+      font-weight: bold;
+      line-height: 80px;
+    }
+
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+    }
+
+    .menu {
+      top: 50px;
+    }
+  </style>
+
+</head>
+<br><br>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="container">
+    <div class="form">
+      <div class="note">
+        <p>Delete Department</p>
+      </div>
+      <div class="form-content">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p>Are you sure you want to delete the department "{{ department.name }}" (ID: {{ department.department_id }})?</p>
+          </div>
+        </div>
+        <button type="submit" class="btnSubmit">Yes, Delete</button>
+        <a href="{% url 'admin-view-departments' %}" class="btnSubmit">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,157 @@
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      height: 80px;
+      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+      color: #fff;
+      font-weight: bold;
+      line-height: 80px;
+    }
+
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+      margin: 10px 0;
+    }
+
+    .menu {
+      top: 50px;
+    }
+
+    .help-text {
+      font-size: 0.9em;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
+    .detail-value {
+      font-size: 1em;
+      color: #333;
+    }
+  </style>
+
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+</head>
+<br><br>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="container register-form">
+    <div class="form">
+      <div class="note">
+        <p>Discharge Patient</p>
+      </div>
+      <div class="form-content">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center">
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Patient ID:</label>
+              <p class="detail-value">{{ patientDict.patientId|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Name:</label>
+              <p class="detail-value">{{ patientDict.name|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Admit Date:</label>
+              <p class="detail-value">{{ patientDict.admitDate|date:"Y-m-d"|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Today Date:</label>
+              <p class="detail-value">{{ patientDict.todayDate|date:"Y-m-d"|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Days Spent:</label>
+              <p class="detail-value">{{ patientDict.day|default:"N/A" }}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Mobile:</label>
+              <p class="detail-value">{{ patientDict.mobile|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Address:</label>
+              <p class="detail-value">{{ patientDict.address|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Symptoms:</label>
+              <p class="detail-value">{{ patientDict.symptoms|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Assigned Doctor:</label>
+              <p class="detail-value">{{ patientDict.assignedDoctorName|default:"N/A" }}</p>
+            </div>
+            <div class="form-group">
+              <label>Room:</label>
+              <p class="detail-value">{{ patientDict.room|default:"N/A" }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Room Charge per Day (in EGP):</label>
+              {{ form.roomCharge|add_class:"form-control" }}
+              <div class="help-text">{{ form.roomCharge.help_text }}</div>
+            </div>
+            <div class="form-group">
+              <label>Medicine Fee (in EGP):</label>
+              {{ form.medicineCost|add_class:"form-control" }}
+              <div class="help-text">{{ form.medicineCost.help_text }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Doctor Fee (in EGP):</label>
+              {{ form.doctorFee|add_class:"form-control" }}
+              <div class="help-text">{{ form.doctorFee.help_text }}</div>
+            </div>
+            <div class="form-group">
+              <label>Other Charges (in EGP):</label>
+              {{ form.OtherCharge|add_class:"form-control" }}
+              <div class="help-text">{{ form.OtherCharge.help_text }}</div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btnSubmit">Discharge Patient</button>
+        <a href="{% url 'admin-view-departments' %}" class="btnSubmit">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock content %}

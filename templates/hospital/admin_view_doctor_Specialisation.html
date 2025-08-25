@@ -1,0 +1,121 @@
+{% extends 'hospital/admin_base.html' %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link { text-decoration: none; }
+    
+    .container {
+      padding: 2rem;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .panel-heading {
+      background: linear-gradient(90deg, #6f42c1 0%, #5a2d91 100%);
+      color: white;
+      padding: 1rem;
+      margin: 0;
+    }
+
+    .panel-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      text-align: center;
+    }
+
+    .table {
+      margin: 0;
+    }
+
+    .table th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .table td {
+      padding: 1rem;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .department-badge {
+      background: linear-gradient(90deg, #6f42c1 0%, #5a2d91 100%);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .doctor-name {
+      font-weight: 600;
+      color: #495057;
+    }
+
+    .mobile-number {
+      color: #6c757d;
+      font-family: monospace;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #6c757d;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="panel">
+    <div class="panel-heading">
+      <h6 class="panel-title"><i class="fas fa-stethoscope"></i> Department & Doctors</h6>
+    </div>
+    {% if doctors %}
+    <div class="table-responsive">
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Doctor Name</th>
+            <th>Mobile</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in doctors %}
+          <tr>
+            <td>
+              <span class="department-badge">{{ d.department }}</span>
+            </td>
+            <td class="doctor-name">{{ d.get_name }}</td>
+            <td class="mobile-number">{{ d.mobile }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-user-md"></i>
+      <h5>No doctors found</h5>
+      <p>No doctors are currently registered in the system.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock content %}

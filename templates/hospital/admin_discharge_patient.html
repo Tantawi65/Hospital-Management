@@ -1,0 +1,222 @@
+{% extends 'hospital/admin_base.html' %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link { text-decoration: none; }
+    
+    .container {
+      padding: 2rem;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .panel-heading {
+      background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+      padding: 1rem;
+      margin: 0;
+    }
+
+    .panel-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      text-align: center;
+    }
+
+    .table {
+      margin: 0;
+    }
+
+    .table th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .table td {
+      padding: 1rem;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .btn {
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .btn-warning {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #212529;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+      transform: translateY(-1px);
+    }
+
+    .status-paid {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status-partial {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #6c757d;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .ward-panel .panel-heading {
+      background: linear-gradient(90deg, #6f42c1 0%, #5a2d91 100%);
+    }
+  </style>
+  <script>
+    function confirmDischarge() {
+      return confirm('Are you sure you want to discharge this patient?');
+    }
+  </script>
+</head>
+
+<div class="container">
+  <div class="panel">
+    <div class="panel-heading">
+      <h6 class="panel-title"><i class="fas fa-procedures"></i> Discharge Patient</h6>
+    </div>
+    {% if patients %}
+    <div class="table-responsive">
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Symptoms</th>
+            <th>Mobile</th>
+            <th>Ward/Room</th>
+            <th>Billing Status</th>
+            <th>Generate Bill</th>
+            <th>Discharge</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in patients %}
+          <tr>
+            <td><strong>{{ p.get_name }}</strong></td>
+            <td>{{ p.symptoms|default:"N/A" }}</td>
+            <td>{{ p.mobile|default:"N/A" }}</td>
+            <td>{{ p.assigned_ward.room_id|default:"Not Assigned" }}</td>
+            <td>
+              {% if p.billing_status == "Paid" %}
+                <span class="status-paid">{{ p.billing_status }}</span>
+              {% elif p.billing_status == "Partial" %}
+                <span class="status-partial">{{ p.billing_status }}</span>
+              {% else %}
+                <span class="status-pending">{{ p.billing_status }}</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if p.billing_status != "Paid" %}
+                <a class="btn btn-warning btn-sm" href="{% url 'generate-patient-bill' p.id %}">
+                  <i class="fas fa-file-invoice-dollar"></i> Generate Bill
+                </a>
+              {% else %}
+                <span class="status-paid">Paid</span>
+              {% endif %}
+            </td>
+            <td>
+              <a class="btn btn-danger btn-sm" href="{% url 'discharge-patient' p.id %}" onclick="return confirmDischarge()" title="Discharge Patient">
+                <i class="fas fa-sign-out-alt"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-bed"></i>
+      <h5>No patients to discharge</h5>
+      <p>No patients are currently available for discharge.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Optional: Display occupied wards -->
+  {% if wards %}
+  <div class="panel ward-panel">
+    <div class="panel-heading">
+      <h6 class="panel-title"><i class="fas fa-door-open"></i> Occupied Wards</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Ward/Room ID</th>
+            <th>Patient</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ward in wards %}
+          <tr>
+            <td><strong>{{ ward.room_id }}</strong></td>
+            <td>{{ ward.assigned_patient.get_name|default:"N/A" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="2">No occupied wards.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock content %}

@@ -1,0 +1,122 @@
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      height: 80px;
+      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+      color: #fff;
+      font-weight: bold;
+      line-height: 80px;
+    }
+
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+      margin: 10px 0;
+    }
+
+    .menu {
+      top: 50px;
+    }
+
+    .action-buttons a {
+      margin: 0 5px;
+      padding: 8px 16px;
+      border-radius: 1.5rem;
+      color: #fff;
+      background: #0062cc;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .action-buttons a:hover {
+      background: #004a99;
+    }
+
+    .table-container {
+      margin-top: 20px;
+    }
+  </style>
+
+</head>
+<br><br>
+
+<div class="container">
+  <div class="form">
+    <div class="note">
+      <p>Patients Awaiting Discharge</p>
+    </div>
+  </div>
+
+  {% if messages %}
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} text-center">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="table-container">
+    <div class="form-content">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Admit Date</th>
+            <th>Room</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for patient in patients %}
+          <tr>
+            <td>{{ patient.id }}</td>
+            <td>{{ patient.get_name|default:"N/A" }}</td>
+            <td>{{ patient.mobile|default:"N/A" }}</td>
+            <td>{{ patient.admitDate|date:"Y-m-d"|default:"N/A" }}</td>
+            <td>{{ patient.assigned_room.room_id|default:"N/A" }}</td> <!-- Changed to assigned_room -->
+            <td class="action-buttons">
+              <a href="{% url 'admin-discharge-patient' patient.id %}">Discharge</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">No patients awaiting discharge.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

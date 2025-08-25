@@ -1,0 +1,156 @@
+{% extends 'hospital/doctor_base.html' %}
+{% load static %}
+{% load patient_filters %}
+
+{% block content %}
+<style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #495057;
+    }
+    
+    .page-title h2 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-title p {
+      font-size: 1rem;
+      color: #6c757d;
+    }
+    
+    .modern-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .modern-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modern-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      text-align: center;
+      vertical-align: middle;
+    }
+    
+    .modern-table td {
+      text-align: center;
+      vertical-align: middle;
+      border-color: #e9ecef;
+    }
+    
+    .modern-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .btn-modern {
+      border-radius: 8px;
+      font-weight: 500;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-modern:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }  </style>
+
+<div class="dashboard-main">
+  <div class="dashboard-content">
+    <div class="page-title">
+      <h2><i class="fas fa-users"></i> My Patients</h2>
+      <p>View and manage patients assigned to your care</p>
+    </div>
+      <div class="container-fluid">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      
+      <div class="card modern-card">
+        <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-user-friends me-2"></i>Assigned Patients
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          {% if patients %}
+          <div class="table-responsive">
+            <table class="table table-hover modern-table mb-0">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-user me-1"></i>Name</th>
+                  <th><i class="fas fa-image me-1"></i>Profile Picture</th>
+                  <th><i class="fas fa-stethoscope me-1"></i>Symptoms</th>
+                  <th><i class="fas fa-phone me-1"></i>Mobile</th>
+                  <th><i class="fas fa-map-marker-alt me-1"></i>Address</th>
+                  <th><i class="fas fa-bed me-1"></i>Ward/Room</th>
+                  <th><i class="fas fa-edit me-1"></i>Update</th>
+                  <th><i class="fas fa-notes-medical me-1"></i>Medical Records</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for p in patients %}
+                <tr>
+                  <td><strong>{{ p.get_name|default:"Unknown" }}</strong></td>
+                  <td>
+                    {% if p.profile_pic %}
+                      <img src="{{ p.profile_pic.url }}" alt="Profile" class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;" />
+                    {% else %}
+                      <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="height: 40px; width: 40px;">
+                        <i class="fas fa-user text-white"></i>
+                      </div>
+                    {% endif %}
+                  </td>
+                  <td>{{ p.symptoms|default:"N/A" }}</td>
+                  <td>{{ p.mobile|default:"N/A" }}</td>
+                  <td>{{ p.address|default:"N/A" }}</td>
+                  <td>{{ p|get_ward_room }}</td>
+                  <td>
+                    <a class="btn btn-primary btn-modern btn-sm" href="{% url 'doctor-update-patient' p.id %}">
+                      <i class="fas fa-edit me-1"></i>Update
+                    </a>
+                  </td>
+                  <td>
+                    <a class="btn btn-success btn-modern btn-sm" href="{% url 'doctor_view_medical_records' p.id %}">
+                      <i class="fas fa-folder-open me-1"></i>Records
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-user-slash text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">No Patients Assigned!</h4>
+            <p class="text-muted">Contact the admin to assign patients to your care.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

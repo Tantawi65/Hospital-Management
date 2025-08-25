@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Patient Login | Hospital</title>
+
+  <!-- Bootstrap 4 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <style>
+    body {
+      background-color: #f4f7fc;
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: auto;
+      margin-top: 8%;
+      padding: 30px;
+      background: white;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .login-title {
+      text-align: center;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 20px;
+      transition: color 0.3s;
+    }
+
+    .form-control {
+      border-radius: 25px;
+      padding: 12px;
+      transition: background 0.3s, color 0.3s, border 0.3s;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 10px;
+      border-radius: 25px;
+      background: #007bff;
+      color: white;
+      border: none;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .btn-login:hover {
+      background: #0056b3;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .signup-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    .dark-mode .login-container {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-mode .login-title {
+      color: #1e90ff;
+    }
+
+    .dark-mode .form-control {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .dark-mode .btn-login {
+      background: #1e90ff;
+    }
+
+    .dark-mode .btn-login:hover {
+      background: #007acc;
+    }
+  </style>
+</head>
+
+<body>
+  {% include "hospital/navbar.html" %}
+
+  <div class="container">
+    <div class="login-container">
+      <h2 class="login-title">Patient Login</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          {% render_field form.username class="form-control" placeholder="Username" %}
+        </div>
+        <div class="form-group">
+          {% render_field form.password class="form-control" placeholder="Password" %}
+        </div>
+        <button type="submit" class="btn btn-login">Login</button>
+      </form>
+      <div class="signup-link">
+        <p>Don't have an account? <a href="patientsignup">Sign up here</a></p>
+      </div>
+    </div>
+  </div>
+
+  {% include "hospital/footer.html" %}
+</body>
+
+</html>

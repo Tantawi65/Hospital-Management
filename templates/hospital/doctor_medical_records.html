@@ -1,0 +1,184 @@
+{% extends 'hospital/doctor_base.html' %}
+{% load static %}
+
+{% block content %}
+<style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    h6 {
+      text-align: center;
+    }
+    .panel-primary {
+      border-color: #337ab7;
+    }
+    .panel-primary > .panel-heading {
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #337ab7;
+    }
+    .table-hover tbody tr:hover {
+      background-color: #f5f5f5;
+    }
+    .btn-xs {
+      padding: 1px 5px;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: 3px;
+    }
+    .btn-success {
+      color: #fff;
+      background-color: #5cb85c;
+      border-color: #4cae4c;
+    }
+    .btn-success:hover {
+      background-color: #449d44;
+      border-color: #398439;
+    }
+    .btn-danger {
+      color: #fff;
+      background-color: #d9534f;
+      border-color: #d43f3a;
+    }
+    .btn-danger:hover {
+      background-color: #c9302c;
+      border-color: #ac2925;
+    }
+    .btn-primary {
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #2e6da4;
+    }
+    .btn-primary:hover {
+      background-color: #286090;
+      border-color: #204d74;
+    }
+    .glyphicon {
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1;
+    }
+    th, td {
+      vertical-align: middle;
+      text-align: center;
+    }
+    .btn-add-record {
+      margin-bottom: 20px;
+    }
+    .pagination {
+      margin-top: 20px;
+      justify-content: center;
+      display: flex;
+    }
+    .search-form {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  </style>
+  <script>
+    // Add JavaScript confirmation for delete action
+    function confirmDelete(recordId) {
+      return confirm("Are you sure you want to delete medical record " + recordId + "? This action cannot be undone.");
+    }  </script>
+
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Medical Records for {{ patient.get_name }}</h6>
+    </div>
+    <div class="search-form">
+      <form method="get" action="">
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Search records..." class="form-control" style="display: inline-block; width: 300px;">
+        <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Search</button>
+      </form>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+      {% if existing_record %}
+        <a href="{% url 'doctor_edit_medical_record' existing_record.record_id %}" class="btn btn-success btn-add-record">
+          <span class="glyphicon glyphicon-edit"></span> Edit Record
+        </a>
+      {% else %}
+        <a href="{% url 'add_medical_record' patient.id %}" class="btn btn-success btn-add-record">
+          <span class="glyphicon glyphicon-plus"></span> Add New Record
+        </a>
+      {% endif %}
+    </div>
+    {% if medical_records %}
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Record ID</th>
+          <th>Diagnosis</th>
+          <th>Prescribed Treatment</th>
+          <th>Test Results</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in medical_records %}
+        <tr>
+          <td>{{ record.record_id }}</td>
+          <td>{{ record.diagnosis|default:"N/A" }}</td>
+          <td>{{ record.prescribed_treatment|default:"N/A" }}</td>
+          <td>
+            {% if record.test_results %}
+              <ul>
+                {% for test in record.test_results %}
+                  <li>{{ test.test }}: {{ test.result }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td>{{ record.created_at|date:"d M Y H:i" }}</td>
+          <td>
+            <a href="{% url 'doctor_delete_medical_record' record.record_id %}" class="btn btn-danger btn-xs" onclick="return confirmDelete('{{ record.record_id }}');">
+              <span class="glyphicon glyphicon-trash"></span> Delete
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if medical_records.has_other_pages %}
+    <ul class="pagination">
+      {% if medical_records.has_previous %}
+      <li><a href="?page={{ medical_records.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">«</a></li>
+      {% else %}
+      <li class="disabled"><span>«</span></li>
+      {% endif %}
+      {% for num in medical_records.paginator.page_range %}
+      {% if medical_records.number == num %}
+      <li class="active"><span>{{ num }}</span></li>
+      {% else %}
+      <li><a href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}">{{ num }}</a></li>
+      {% endif %} <!-- Added the missing endif -->
+      {% endfor %}
+      {% if medical_records.has_next %}
+      <li><a href="?page={{ medical_records.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">»</a></li>
+      {% else %}
+      <li class="disabled"><span>»</span></li>
+      {% endif %}
+    </ul>
+    {% endif %}
+    {% else %}
+    <br><br>
+    <h4 style="text-align: center; color: red;">No Medical Records Found!</h4>
+    <p style="text-align: center;">Add a new record using the button above.</p>
+    {% endif %}
+  </div>
+  <div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'doctor-view-patient' %}" class="btn btn-primary">Back to Patients</a>
+  </div>
+</div>
+{% endblock content %}

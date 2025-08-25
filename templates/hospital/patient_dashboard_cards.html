@@ -1,0 +1,290 @@
+
+{% load static %}
+
+<style>
+  .dashboard-container {
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    padding: 1rem;
+    margin-top: 20px;
+  }
+
+  .dashboard-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.8rem;
+  }
+
+  .welcome-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .welcome-card h3 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .welcome-card p {
+    color: #666;
+    font-size: 1rem;
+  }
+
+  .card-stat {
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+    height: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-stat:hover {
+    transform: translateY(-6px);
+  }
+
+  .card-stat h3 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .card-stat h5 {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+
+  .card-stat p {
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    color: #999;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: #f0f0f0;
+    color: #fff;
+  }
+
+  .bg-appointments { background-color: #3498db; }
+  .bg-records { background-color: #e74c3c; }
+  .bg-doctors { background-color: #f39c12; }
+  .bg-departments { background-color: #9b59b6; }
+
+  .quick-actions {
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .quick-actions h5 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .btn-quick {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-quick:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .info-section {
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-section h5 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .info-section .list-group-item {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #eee;
+    padding: 0.75rem 0;
+  }
+
+  .info-section .list-group-item:last-child {
+    border-bottom: none;
+  }
+</style>
+
+<div class="dashboard-container">
+  <h2 class="dashboard-title">Patient Dashboard</h2>
+  
+  <!-- Welcome Card -->
+  <div class="welcome-card">
+    <h3>Welcome back, {{ request.user.first_name }}!</h3>
+    <p>Here's your health overview and quick access to important features.</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6">
+      <div class="card-stat">
+        <div class="d-flex align-items-center">
+          <div class="card-icon bg-appointments me-3">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <div>
+            <h3>{{ total_appointment|default:"0" }}</h3>
+            <h5>Total Appointments</h5>
+            <p>All scheduled visits</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="card-stat">
+        <div class="d-flex align-items-center">
+          <div class="card-icon bg-records me-3">
+            <i class="fas fa-file-medical"></i>
+          </div>
+          <div>
+            <h3>{{ total_medical_records|default:"0" }}</h3>
+            <h5>Medical Records</h5>
+            <p>Health documents</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="card-stat">
+        <div class="d-flex align-items-center">
+          <div class="card-icon bg-doctors me-3">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div>
+            <h3>{{ total_doctor|default:"0" }}</h3>
+            <h5>Available Doctors</h5>
+            <p>Medical specialists</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="card-stat">
+        <div class="d-flex align-items-center">
+          <div class="card-icon bg-departments me-3">
+            <i class="fas fa-building"></i>
+          </div>
+          <div>
+            <h3>{{ total_department|default:"0" }}</h3>
+            <h5>Departments</h5>
+            <p>Specialized units</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Quick Actions -->
+    <div class="col-xl-4 col-lg-6">
+      <div class="quick-actions">
+        <h5><i class="fas fa-rocket me-2"></i>Quick Actions</h5>
+        <a href="/patient-appointment" class="btn btn-quick">
+          <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+        </a>
+        <a href="/patient-view-doctor" class="btn btn-quick">
+          <i class="fas fa-search me-2"></i>Find Doctors
+        </a>
+        <a href="/patient/medical-records/" class="btn btn-quick">
+          <i class="fas fa-file-medical me-2"></i>View Records
+        </a>
+        <a href="/patient-view-departments" class="btn btn-quick">
+          <i class="fas fa-building me-2"></i>Departments
+        </a>
+      </div>
+    </div>
+
+    <!-- Health Tips -->
+    <div class="col-xl-4 col-lg-6">
+      <div class="info-section">
+        <h5><i class="fas fa-heartbeat me-2"></i>Health Tips</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <small><i class="fas fa-check-circle text-success me-2"></i>Stay hydrated - drink 8 glasses of water daily</small>
+          </li>
+          <li class="list-group-item">
+            <small><i class="fas fa-check-circle text-success me-2"></i>Exercise regularly for 30 minutes</small>
+          </li>
+          <li class="list-group-item">
+            <small><i class="fas fa-check-circle text-success me-2"></i>Get 7-8 hours of quality sleep</small>
+          </li>
+          <li class="list-group-item">
+            <small><i class="fas fa-check-circle text-success me-2"></i>Take medications as prescribed</small>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Patient Information -->
+    <div class="col-xl-4 col-lg-12">
+      <div class="info-section">
+        <h5><i class="fas fa-user me-2"></i>Your Information</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between">
+            <span><strong>Patient ID:</strong></span>
+            <span>{{ request.user.id|default:"N/A" }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span><strong>Age:</strong></span>
+            <span>{{ age|default:"N/A" }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span><strong>Blood Group:</strong></span>
+            <span>{{ blood_group|default:"N/A" }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span><strong>Room:</strong></span>
+            <span>{{ room_number|default:"Not Assigned" }}</span>          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

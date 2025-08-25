@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .bill-header {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .bill-details {
+            margin: 10px 0;
+        }
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="bill-header">Hospital Bill</div>
+    <div class="bill-details">
+        <p><span class="label">Bill ID:</span> {{ bill_id|default:"N/A" }}</p>
+        <p><span class="label">Patient Name:</span> {{ patientName|default:"N/A" }}</p>
+        <p><span class="label">Assigned Doctor:</span> {{ assignedDoctorName|default:"N/A" }}</p>
+        <p><span class="label">Address:</span> {{ address|default:"N/A" }}</p>
+        <p><span class="label">Mobile:</span> {{ mobile|default:"N/A" }}</p>
+        <p><span class="label">Symptoms:</span> {{ symptoms|default:"N/A" }}</p>
+        <p><span class="label">Admit Date:</span> {{ admitDate|date:"Y-m-d"|default:"N/A" }}</p>
+        <p><span class="label">Release Date:</span> {{ releaseDate|date:"Y-m-d"|default:"N/A" }}</p>
+        <p><span class="label">Days Spent:</span> {{ daySpent|default:"N/A" }}</p>
+        <p><span class="label">Room Charge:</span> ${{ roomCharge|default:"0.00" }}</p>
+        <p><span class="label">Medicine Cost:</span> ${{ medicineCost|default:"0.00" }}</p>
+        <p><span class="label">Doctor Fee:</span> ${{ doctorFee|default:"0.00" }}</p>
+        <p><span class="label">Other Charges:</span> ${{ otherCharge|default:"0.00" }}</p>
+        <p><span class="label">Treatment Cost:</span> ${{ treatmentCost|default:"0.00" }}</p>
+        <p><span class="label">Total Amount:</span> ${{ total|default:"0.00" }}</p>
+        <p><span class="label">Payment Status:</span> {{ paymentStatus|default:"N/A" }}</p>
+        <p><span class="label">Generated On:</span> {{ generated_on|default:"N/A" }}</p>
+    </div>
+</body>
+</html>

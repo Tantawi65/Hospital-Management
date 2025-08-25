@@ -1,0 +1,71 @@
+{% extends "hospital/doctor_base.html" %}
+{% load static %}
+
+{% block content %}
+<style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    h6 {
+      text-align: center;
+    }
+    .panel-primary {
+      border-color: #337ab7;
+    }
+    .panel-primary > .panel-heading {
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #337ab7;
+    }
+    .btn-primary {
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #2e6da4;
+    }
+    .btn-primary:hover {
+      background-color: #286090;
+      border-color: #204d74;
+    }
+    .btn-danger {
+      color: #fff;
+      background-color: #d9534f;
+      border-color: #d43f3a;
+    }
+    .btn-danger:hover {
+      background-color: #c9302c;
+      border-color: #ac2925;
+    }  </style>
+
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h6 class="panel-title">User Information</h6>
+      </div>
+      <div class="panel-body">
+        {{ userForm.as_p }}
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h6 class="panel-title">Patient Information</h6>
+      </div>
+      <div class="panel-body">
+        {{ patientForm.as_p }}
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+      <button type="submit" class="btn btn-primary">Update</button>
+      <a class="btn btn-danger" href="{% url 'doctor-view-patient' %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock content %}

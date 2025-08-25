@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff;
+      color: #333;
+      transition: all 0.3s ease;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    .dark-mode {
+      background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+      color: #ecf0f1;
+    }
+
+    .container {
+      text-align: center;
+      padding: 60px 20px 40px;
+      min-height: calc(100vh - 120px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }    .title-header {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .dark-mode .title-header {
+      color: #fff;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 50px;
+      font-weight: 300;
+    }
+
+    .dark-mode .subtitle {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 40px;
+      padding: 20px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .grid-item {
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    .dark-mode .card {
+      background: rgba(42, 42, 62, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 20px 20px 0 0;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .dark-mode .card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-icon {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-icon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    }
+
+    .card-icon i {
+      font-size: 4rem;
+      color: #667eea;
+      z-index: 1;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .card-icon i {
+      transform: scale(1.1);
+      color: #764ba2;
+    }
+
+    .card-content {
+      padding: 30px 20px;
+    }
+
+    .title {
+      color: #2c3e50;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 15px 0;
+      letter-spacing: 0.5px;
+    }
+
+    .dark-mode .title {
+      color: #ecf0f1;
+    }
+
+    .description {
+      color: #6c757d;
+      font-size: 0.95rem;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .dark-mode .description {
+      color: #bdc3c7;
+    }
+
+    .action-btn {
+      border: none;
+      outline: 0;
+      padding: 12px 30px;
+      color: white;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .action-btn:hover::before {
+      left: 100%;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-btn a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .title-header {
+        font-size: 2.5rem;
+      }
+      
+      .grid-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 10px;
+      }
+      
+      .card {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title-header {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    /* Animation for cards */
+    .card {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="title-header">Access Portal</div>
+    <div class="subtitle">Choose your role to access the system</div>
+
+    <div class="grid-container">
+      <div class="grid-item">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="card-content">
+            <p class="title">DOCTOR</p>
+            <p class="description">Access patient records, manage appointments, and provide medical care</p>
+            <button class="action-btn">
+              <a href="/doctorclick">Access Portal</a>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-item">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-user-injured"></i>
+          </div>
+          <div class="card-content">
+            <p class="title">PATIENT</p>
+            <p class="description">Book appointments, view medical records, and manage your healthcare</p>
+            <button class="action-btn">
+              <a href="/patientclick">Access Portal</a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

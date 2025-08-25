@@ -1,0 +1,332 @@
+{% extends 'hospital/doctor_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-main">
+  <div class="dashboard-content">
+    <h2 class="dashboard-title">Room Management</h2>
+    
+    <div class="container">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      
+      <!-- Room Overview Cards -->
+      <div class="row mb-4">        <div class="col-lg-4 col-md-6 mb-3">
+          <div class="card bg-c-blue order-card">
+            <div class="card-block">
+              <i class="fas fa-bed"></i>
+              <h6>Total Rooms</h6>
+              <p class="text-white-50">{{ total_rooms_count }} rooms in hospital</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-3">
+          <div class="card bg-c-green order-card">
+            <div class="card-block">
+              <i class="fas fa-check-circle"></i>
+              <h6>Available Rooms</h6>
+              <p class="text-white-50">{{ available_rooms_count }} rooms available</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-3">
+          <div class="card bg-c-yellow order-card">
+            <div class="card-block">
+              <i class="fas fa-user-injured"></i>
+              <h6>Occupied Rooms</h6>
+              <p class="text-white-50">{{ occupied_rooms_count }} rooms in use</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Room Status Table -->
+      <div class="card modern-card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-bed me-2"></i>Room Status Overview
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover modern-table">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-hashtag me-1"></i>Room ID</th>
+                  <th><i class="fas fa-door-open me-1"></i>Type</th>
+                  <th><i class="fas fa-building me-1"></i>Ward</th>
+                  <th><i class="fas fa-check-circle me-1"></i>Status</th>
+                  <th><i class="fas fa-user me-1"></i>Assigned Patient</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for room in rooms %}
+                <tr>
+                  <td><span class="badge bg-secondary">{{ room.room_id }}</span></td>
+                  <td>{{ room.type }}</td>
+                  <td>{{ room.ward|default:"N/A" }}</td>
+                  <td>
+                    {% if room.availability %}
+                      <span class="badge bg-success">Available</span>
+                    {% else %}
+                      <span class="badge bg-danger">Occupied</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ room.assigned_patient.get_name|default:"None" }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Assignment Forms -->
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <div class="card modern-card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-user-plus me-2 text-success"></i>Assign Room to Patient
+              </h5>
+            </div>
+            <div class="card-body">
+              <form method="post">
+                {% csrf_token %}
+                <div class="form-fields">
+                  {{ assign_form.as_p }}
+                </div>
+                <button type="submit" name="assign" class="btn btn-success w-100">
+                  <i class="fas fa-check me-1"></i>Assign Room
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5 col-md-6">
+          <div class="card modern-card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-sign-out-alt me-2 text-primary"></i>Discharge Patient from Room
+              </h5>
+            </div>
+            <div class="card-body">
+              <form method="post">
+                {% csrf_token %}
+                <div class="form-fields">
+                  {{ discharge_form.as_p }}
+                </div>
+                <button type="submit" name="discharge" class="btn btn-primary w-100">
+                  <i class="fas fa-sign-out-alt me-1"></i>Discharge Patient
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <div class="text-center mt-4">
+        <a href="{% url 'doctor-view-patient' %}" class="btn btn-outline-primary">
+          <i class="fas fa-arrow-left me-1"></i>Back to Patients
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .dashboard-main {
+    margin-left: 0;
+    padding: 1rem 1rem 2rem;
+    min-height: 100vh;
+    background: linear-gradient(to right, #d9e4f5, #f3f9ff);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .dashboard-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  .dashboard-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.5rem;
+  }
+
+  /* Admin-style overview cards */
+  .order-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .order-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-block {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .card-block h6 {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .card-block i {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
+  }
+
+  .bg-c-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .bg-c-green {
+    background: linear-gradient(135deg, #2ed8b6 0%, #59e0c5 100%);
+  }
+
+  .bg-c-yellow {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+
+  .bg-c-pink {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+
+  .order-card a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .order-card a:hover {
+    color: white;
+    text-decoration: none;
+  }
+
+  .modern-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .modern-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    background: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1rem 1rem 0 0 !important;
+    padding: 1rem 1.25rem;
+  }
+
+  .card-title {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .modern-table {
+    margin-bottom: 0;
+  }
+
+  .modern-table th {
+    background: rgba(0, 123, 255, 0.1);
+    border: none;
+    font-weight: 600;
+    color: #333;
+    padding: 1rem 0.75rem;
+  }
+
+  .modern-table td {
+    border: none;
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+  }
+
+  .modern-table tbody tr:hover {
+    background: rgba(0, 123, 255, 0.05);
+  }
+
+  .form-fields p {
+    margin-bottom: 1rem;
+  }
+
+  .form-fields label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .form-fields input, .form-fields select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    transition: border-color 0.3s ease;
+  }
+
+  .form-fields input:focus, .form-fields select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  .btn {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .alert {
+    border-radius: 0.5rem;
+    border: none;
+    backdrop-filter: blur(10px);
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-main {
+      padding: 0.5rem;
+    }
+    
+    .table-responsive {
+      font-size: 0.875rem;
+    }
+    
+    .col-lg-5 {
+      margin-bottom: 1rem;
+    }
+  }
+</style>
+{% endblock content %}

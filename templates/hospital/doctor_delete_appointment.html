@@ -1,0 +1,58 @@
+{% extends 'hospital/doctor_base.html' %}
+{% block content %}
+{% load static %}
+
+<style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }    .row {
+      margin: 100px;
+    }
+  </style>
+
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Delete Your Appointments</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Picture</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      {% for a, p in appointments %}
+      <tr>
+        <td>{{ a.patientName }}</td>
+        <td><img src="{{ p.profile_pic.url }}" alt="Profile Pic" height="40px" width="40px" /></td>
+        <td>{{ a.description }}</td>
+        <td>{{ a.appointmentDate|date:"d M Y, H:i" }}</td>
+        <td>{{ a.status }}</td>
+        <td>
+          {% if a.status == 'Approved' %}
+            <a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' a.id %}"><span class="glyphicon glyphicon-trash"></span></a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

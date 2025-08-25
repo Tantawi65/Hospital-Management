@@ -1,0 +1,414 @@
+{% extends 'hospital/patient_base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<style>
+    .reschedule-appointment {
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .reschedule-header {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px 15px 0 0;
+        margin-bottom: 0;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .reschedule-content {
+        background: white;
+        border-radius: 0 0 15px 15px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        min-height: 600px;
+    }
+
+    .current-appointment {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d6eafc 100%);
+        border: 2px solid #3498db;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .current-title {
+        color: #2980b9;
+        font-weight: 600;
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .current-details {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .current-details:last-child {
+        margin-bottom: 0;
+    }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    .doctor-icon {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    }
+
+    .date-icon {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+
+    .detail-content {
+        flex: 1;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        color: #6c757d;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        background: white;
+    }
+
+    .btn-reschedule {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-reschedule:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #6c757d;
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-cancel:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+    }
+
+    .errorlist {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        list-style: none;
+        padding: 0;
+    }
+
+    .errorlist li {
+        background: #f8d7da;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid #dc3545;
+    }
+
+    .reschedule-info {
+        background: #e3f2fd;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid #3498db;
+    }
+
+    .reschedule-info h6 {
+        color: #1976d2;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .reschedule-info p {
+        color: #6c757d;
+        margin-bottom: 0;
+        font-size: 0.9rem;
+    }
+
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-section h5 {
+        color: #2980b9;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .reschedule-header {
+            padding: 1.5rem;
+        }
+        
+        .reschedule-content {
+            padding: 1.5rem;
+        }
+        
+        .current-appointment {
+            padding: 1.5rem;
+        }
+        
+        .current-details {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .detail-icon {
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-reschedule, .btn-cancel {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<div class="reschedule-appointment">
+    <div class="container">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="row">
+                <div class="col-12">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Reschedule Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="reschedule-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">
+                                <i class="fas fa-calendar-alt me-3"></i>
+                                Reschedule Appointment
+                            </h2>
+                            <p class="mb-0 opacity-75">Change your appointment to a more convenient time</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="fas fa-clock" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reschedule Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="reschedule-content">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <!-- Current Appointment Details -->
+                            <div class="current-appointment">
+                                <h4 class="current-title">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Current Appointment Details
+                                </h4>
+                                
+                                <div class="current-details">
+                                    <div class="detail-icon doctor-icon">
+                                        <i class="fas fa-user-md"></i>
+                                    </div>
+                                    <div class="detail-content">
+                                        <div class="detail-label">Doctor</div>
+                                        <p class="detail-value">{{ appointment.doctorName }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="current-details">
+                                    <div class="detail-icon date-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="detail-content">
+                                        <div class="detail-label">Current Date & Time</div>
+                                        <p class="detail-value">{{ appointment.appointmentDate|date:"d M Y, H:i" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reschedule Information -->
+                            <div class="reschedule-info">
+                                <h6><i class="fas fa-lightbulb me-2"></i>Reschedule Guidelines</h6>
+                                <p>Please select a new date and time for your appointment. Make sure to choose a convenient time that works with your schedule.</p>
+                            </div>
+
+                            <!-- Reschedule Form -->
+                            <div class="form-section">
+                                <h5>
+                                    <i class="fas fa-edit me-2"></i>
+                                    New Appointment Details
+                                </h5>
+                                
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-lg-8 mx-auto">
+                                            <!-- New Date and Time -->
+                                            <div class="form-group">
+                                                <label for="id_appointmentDate" class="form-label">
+                                                    <i class="fas fa-calendar-plus me-2"></i>New Appointment Date & Time
+                                                </label>
+                                                {% render_field appointmentForm.appointmentDate class="form-control" placeholder="Select new date and time" %}
+                                                {% if appointmentForm.appointmentDate.errors %}
+                                                    <ul class="errorlist">
+                                                        {% for error in appointmentForm.appointmentDate.errors %}
+                                                            <li>{{ error }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </div>
+
+                                            <!-- Description -->
+                                            <div class="form-group">
+                                                <label for="id_description" class="form-label">
+                                                    <i class="fas fa-file-alt me-2"></i>Description / Additional Notes
+                                                </label>
+                                                {% render_field appointmentForm.description class="form-control" placeholder="Update your appointment description or add new notes..." rows="4" %}
+                                                {% if appointmentForm.description.errors %}
+                                                    <ul class="errorlist">
+                                                        {% for error in appointmentForm.description.errors %}
+                                                            <li>{{ error }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </div>
+
+                                            <!-- Action Buttons -->
+                                            <div class="row mt-4">
+                                                <div class="col-md-6 mb-3">
+                                                    <button type="submit" class="btn-reschedule w-100">
+                                                        <i class="fas fa-calendar-check me-2"></i>
+                                                        Confirm Reschedule
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <a href="{% url 'patient-view-appointment' %}" class="btn-cancel w-100">
+                                                        <i class="fas fa-times me-2"></i>
+                                                        Cancel Changes
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Help Section -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card" style="border: 2px dashed #dee2e6; background: #f8f9fa;">
+                                        <div class="card-body text-center py-3">
+                                            <i class="fas fa-question-circle text-muted mb-2"></i>
+                                            <h6 class="text-muted mb-1">Need Help?</h6>
+                                            <p class="text-muted mb-0 small">Contact our support team if you need assistance with rescheduling</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
